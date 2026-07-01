@@ -126,34 +126,23 @@
           document.getElementById("loading").innerText = "正在送出打卡資料...";
 
           try {
-            const response = await fetch(gasUrl, {
-              method: "POST",
-              body: JSON.stringify({
-                name: userName,
-                userId: userId,
-                type: type,
-                lat: lat,
-                lng: lng
-              })
-            });
+            await fetch(gasUrl, {
+  method: "POST",
+  mode: "no-cors",
+  body: JSON.stringify({
+    name: userName,
+    userId: userId,
+    type: type,
+    lat: lat,
+    lng: lng
+  })
+});
 
-            const result = await response.json();
+alert(type + "打卡資料已送出，請到試算表確認紀錄。");
 
-            if (result.success) {
-              alert(type + "打卡成功！\n狀態：" + result.status);
-
-              if (liff.isInClient()) {
-                liff.closeWindow();
-              }
-            } else {
-              alert("打卡失敗：" + result.error);
-              resetUI();
-            }
-
-          } catch (error) {
-            alert("傳送失敗：" + error.message);
-            resetUI();
-          }
+if (liff.isInClient()) {
+  liff.closeWindow();
+}
         },
         function(error) {
           alert("無法取得定位：" + error.message);
