@@ -7,7 +7,7 @@
   <style>
     body {
       background-color: #f8f9fa;
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -75,7 +75,6 @@
 
   <script>
     const liffId = "2010509536-AYeAZGh2";
-
     const gasUrl = "https://script.google.com/macros/s/AKfycbyYpWpgCNsoX490cCUpEryu8Jb8ShDg_frwZOwcDDh1RboTU-PsVpoTq8BSQxIfi2OuNA/exec";
 
     let userName = "";
@@ -83,7 +82,7 @@
 
     async function initLiff() {
       try {
-        document.getElementById("loading").innerText = "正在初始化 LINE...";
+        setLoading("正在初始化 LINE...");
 
         await liff.init({
           liffId: liffId
@@ -94,7 +93,7 @@
           return;
         }
 
-        document.getElementById("loading").innerText = "正在讀取員工資料...";
+        setLoading("正在讀取員工資料...");
 
         const profile = await liff.getProfile();
 
@@ -108,41 +107,35 @@
         document.getElementById("main-content").style.display = "block";
 
       } catch (error) {
-        document.getElementById("loading").innerText =
-          "LIFF 初始化失敗：\n" + error.message;
+        setLoading("LIFF 初始化失敗：\n" + error.message);
       }
     }
 
     function handleClock(type) {
       document.getElementById("main-content").style.display = "none";
       document.getElementById("loading").style.display = "block";
-      document.getElementById("loading").innerText = "正在取得 GPS 定位...";
+      setLoading("正在取得 GPS 定位...");
 
       navigator.geolocation.getCurrentPosition(
-        async function(position) {
+        function(position) {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
 
-          document.getElementById("loading").innerText = "正在送出打卡資料...";
+          setLoading("正在送出打卡資料...");
 
-          try {
-            await fetch(gasUrl, {
-  method: "POST",
-  mode: "no-cors",
-  body: JSON.stringify({
-    name: userName,
-    userId: userId,
-    type: type,
-    lat: lat,
-    lng: lng
-  })
-});
+          submitToAppsScript({
+            name: userName,
+            userId: userId,
+            type: type,
+            lat: lat,
+            lng: lng
+          });
 
-alert(type + "打卡資料已送出，請到試算表確認紀錄。");
+          alert(type + "打卡資料已送出，請到試算表確認紀錄。");
 
-if (liff.isInClient()) {
-  liff.closeWindow();
-}
+          if (liff.isInClient()) {
+            liff.closeWindow();
+          }
         },
         function(error) {
           alert("無法取得定位：" + error.message);
@@ -155,14 +148,50 @@ if (liff.isInClient()) {
       );
     }
 
+    function submitToAppsScript(data) {
+      const iframeName = "hidden-submit-frame";
+
+      let iframe = document.getElementById(iframeName);
+      if (!iframe) {
+        iframe = document.createElement("iframe");
+        iframe.name = iframeName;
+        iframe.id = iframeName;
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+      }
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = gasUrl;
+      form.target = iframeName;
+      form.style.display = "none";
+
+      const input = document.createElement("input");
+      input.name = "payload";
+      input.value = JSON.stringify(data);
+
+      form.appendChild(input);
+      document.body.appendChild(form);
+
+      form.submit();
+
+      setTimeout(function() {
+        document.body.removeChild(form);
+      }, 1000);
+    }
+
     function resetUI() {
       document.getElementById("loading").style.display = "none";
       document.getElementById("main-content").style.display = "block";
     }
 
+    function setLoading(message) {
+      document.getElementById("loading").innerText = message;
+    }
+
     window.onload = function() {
       if (typeof liff === "undefined") {
-        document.getElementById("loading").innerText = "LIFF SDK 載入失敗";
+        setLoading("LIFF SDK 載入失敗");
         return;
       }
 
