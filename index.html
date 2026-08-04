@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>知味打卡系統</title>
+  <title>知味員工系統</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <style>
     body {
@@ -51,6 +51,17 @@
     .btn-off {
       background-color: #dc3545;
     }
+    .btn-blue {
+      background-color: #0d6efd;
+    }
+
+     .btn-purple {
+       background-color: #6f42c1;
+    }
+
+     .btn-gray {
+       background-color: #6c757d;
+    }
 
     #loading {
       font-size: 16px;
@@ -64,13 +75,23 @@
     <div id="loading">系統啟動中，請稍候...LINE測試V3</div>
 
     <div id="main-content" style="display: none;">
-      <img id="user-picture" class="profile-img" src="" alt="頭像">
-      <h3>哈囉，<span id="user-name">員工</span></h3>
-      <p>歡迎使用知味行動打卡系統</p>
+  <img id="user-picture" class="profile-img" src="" alt="頭像">
+  <h3>哈囉，<span id="user-name">員工</span></h3>
+  <p id="page-subtitle">請選擇服務</p>
 
-      <button class="btn-clock btn-on" onclick="handleClock('上班')">上班打卡</button>
-      <button class="btn-clock btn-off" onclick="handleClock('下班')">下班打卡</button>
-    </div>
+  <div id="home-menu">
+    <button class="btn-clock btn-on" onclick="showClockMenu()">打卡</button>
+    <button class="btn-clock btn-blue" onclick="showComingSoon('請假')">請假</button>
+    <button class="btn-clock btn-purple" onclick="showComingSoon('查薪資表')">查薪資表</button>
+    <button class="btn-clock btn-gray" onclick="showComingSoon('查特休')">查特休</button>
+  </div>
+
+  <div id="clock-menu" style="display: none;">
+    <button class="btn-clock btn-on" onclick="handleClock('上班')">上班打卡</button>
+    <button class="btn-clock btn-off" onclick="handleClock('下班')">下班打卡</button>
+    <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
+  </div>
+</div>
   </div>
 
   <script>
@@ -183,6 +204,21 @@
     function resetUI() {
       document.getElementById("loading").style.display = "none";
       document.getElementById("main-content").style.display = "block";
+    }
+    function showClockMenu() {
+      document.getElementById("home-menu").style.display = "none";
+      document.getElementById("clock-menu").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "請選擇打卡類型";
+    }
+
+     function showHomeMenu() {
+      document.getElementById("clock-menu").style.display = "none";
+      document.getElementById("home-menu").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "請選擇服務";
+    }
+
+    function showComingSoon(featureName) {
+      alert(featureName + "功能下一步再做");
     }
 
     function setLoading(message) {
