@@ -123,9 +123,9 @@
     <div class="form-group">
       <label for="leave-type">假別</label>
       <select id="leave-type">
+        <option value="特休">特休</option>
         <option value="事假">事假</option>
         <option value="病假">病假</option>
-        <option value="特休">特休</option>
         <option value="公假">公假</option>
         <option value="其他">其他</option>
       </select>
@@ -137,8 +137,18 @@
     </div>
   
     <div class="form-group">
+      <label for="leave-start-time">開始時間</label>
+      <input id="leave-start-time" type="time">
+    </div>
+  
+    <div class="form-group">
       <label for="leave-end">結束日期</label>
       <input id="leave-end" type="date">
+    </div>
+  
+    <div class="form-group">
+      <label for="leave-end-time">結束時間</label>
+      <input id="leave-end-time" type="time">
     </div>
   
     <div class="form-group">
@@ -289,11 +299,18 @@
     function submitLeave() {
       const leaveType = document.getElementById("leave-type").value;
       const startDate = document.getElementById("leave-start").value;
+      const startTime = document.getElementById("leave-start-time").value;
       const endDate = document.getElementById("leave-end").value;
+      const endTime = document.getElementById("leave-end-time").value;
       const reason = document.getElementById("leave-reason").value.trim();
     
       if (!startDate) {
         alert("請選擇開始日期");
+        return;
+      }
+    
+      if (!startTime) {
+        alert("請選擇開始時間");
         return;
       }
     
@@ -302,8 +319,21 @@
         return;
       }
     
+      if (!endTime) {
+        alert("請選擇結束時間");
+        return;
+      }
+    
       if (!reason) {
         alert("請輸入請假原因");
+        return;
+      }
+    
+      const start = new Date(startDate + "T" + startTime + ":00");
+      const end = new Date(endDate + "T" + endTime + ":00");
+    
+      if (end <= start) {
+        alert("結束時間必須晚於開始時間");
         return;
       }
     
@@ -313,14 +343,18 @@
         userId: userId,
         leaveType: leaveType,
         startDate: startDate,
+        startTime: startTime,
         endDate: endDate,
+        endTime: endTime,
         reason: reason
       });
     
       alert("請假申請已送出，狀態：待審核");
     
       document.getElementById("leave-start").value = "";
+      document.getElementById("leave-start-time").value = "";
       document.getElementById("leave-end").value = "";
+      document.getElementById("leave-end-time").value = "";
       document.getElementById("leave-reason").value = "";
     
       showHomeMenu();
