@@ -110,7 +110,7 @@
     <button class="btn-clock btn-on" onclick="showClockMenu()">打卡</button>
     <button class="btn-clock btn-blue" onclick="showLeaveForm()">請假</button>
     <button class="btn-clock btn-purple" onclick="showComingSoon('查薪資表')">查薪資表</button>
-    <button class="btn-clock btn-gray" onclick="showComingSoon('查特休')">查特休</button>
+    <button class="btn-clock btn-gray" onclick="checkAnnualLeave()">查特休</button>
   </div>
 
   <div id="clock-menu" style="display: none;">
@@ -130,7 +130,11 @@
         <option value="其他">其他</option>
       </select>
     </div>
-  
+  <div id="annual-leave-view" style="display: none;">
+    <h4>我的特休</h4>
+    <p id="annual-leave-result">查詢中...</p>
+    <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
+  </div>
     <div class="form-group">
       <label for="leave-start">開始日期</label>
       <input id="leave-start" type="date">
@@ -282,6 +286,7 @@
      function showHomeMenu() {
       document.getElementById("clock-menu").style.display = "none";
       document.getElementById("leave-form").style.display = "none";
+      document.getElementById("annual-leave-view").style.display = "none";
       document.getElementById("home-menu").style.display = "block";
       document.getElementById("page-subtitle").innerText = "請選擇服務";
     }
@@ -289,10 +294,42 @@
     function showComingSoon(featureName) {
       alert(featureName + "功能下一步再做");
     }
+    async function checkAnnualLeave() {
+      document.getElementById("home-menu").style.display = "none";
+      document.getElementById("clock-menu").style.display = "none";
+      document.getElementById("leave-form").style.display = "none";
+      document.getElementById("annual-leave-view").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "特休查詢";
+      document.getElementById("annual-leave-result").innerText = "查詢中...";
+    
+      try {
+        const url = gasUrl
+          + "?action=annualLeave"
+          + "&userId=" + encodeURIComponent(userId);
+    
+        const response = await fetch(url);
+        const result = await response.json();
+    
+        if (result.success) {
+          document.getElementById("annual-leave-result").innerText =
+            "年度：" + result.year + "\n" +
+            "總特休：" + result.totalDays + "天\n" +
+            "已使用：" + result.usedHours + "小時\n" +
+            "剩餘：" + result.displayText;
+        } else {
+          document.getElementById("annual-leave-result").innerText =
+            result.status || "查詢失敗";
+        }
+
+  } catch (error) {
+    document.getElementById("annual-leave-result").innerText =
+      "查詢失敗：" + error.message;
+  }
+}
     function showLeaveForm() {
       document.getElementById("home-menu").style.display = "none";
       document.getElementById("clock-menu").style.display = "none";
-      document.getElementById("leave-form").style.display = "block";
+      document.getElementById("").style.display = "block";
       document.getElementById("page-subtitle").innerText = "請填寫請假申請";
     }
     
