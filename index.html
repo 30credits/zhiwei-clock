@@ -111,6 +111,7 @@
     <button class="btn-clock btn-blue" onclick="showLeaveForm()">請假</button>
     <button class="btn-clock btn-purple" onclick="showComingSoon('查薪資表')">查薪資表</button>
     <button class="btn-clock btn-gray" onclick="checkAnnualLeave()">查特休</button>
+    <button id="review-leave-button" class="btn-clock btn-purple" style="display: none;" onclick="showLeaveReview()">請假審核</button>
   </div>
 
   <div id="clock-menu" style="display: none;">
@@ -164,6 +165,12 @@
       <h4>我的特休</h4>
       <p id="annual-leave-result">查詢中...</p>
       <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
+    </div> 
+      
+    <div id="leave-review-view" style="display: none;">
+      <h4>請假審核</h4>
+      <div id="leave-review-list">讀取中...</div>
+      <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
     </div>  
 </div>
   </div>
@@ -198,6 +205,7 @@
         document.getElementById("user-name").innerText = userName;
         document.getElementById("user-picture").src = profile.pictureUrl || "";
 
+        checkReviewerPermission();
         document.getElementById("loading").style.display = "none";
         document.getElementById("main-content").style.display = "block";
 
@@ -289,6 +297,7 @@
       document.getElementById("clock-menu").style.display = "none";
       document.getElementById("leave-form").style.display = "none";
       document.getElementById("annual-leave-view").style.display = "none";
+      document.getElementById("leave-review-view").style.display = "none";
       document.getElementById("home-menu").style.display = "block";
       document.getElementById("page-subtitle").innerText = "請選擇服務";
     }
@@ -328,6 +337,95 @@
       "查詢失敗：" + error.message;
   }
 }
+    
+    async function checkReviewerPermission() {
+      try {
+        const url = gasUrl
+          + "?action=pendingLeaves"
+          + "&userId=" + encodeURIComponent(userId);
+    
+        const response = await fetch(url);
+        const result = await response.json();
+    
+        if (result.success) {
+          document.getElementById("review-leave-button").style.display = "block";
+        }
+      } catch (error) {
+        console.log("審核權限檢查失敗", error);
+      }
+    }
+    
+    async function showLeaveReview() {
+      document.getElementById("home-menu").style.display = "none";
+      document.getElementById("clock-menu").style.display = "none";
+      document.getElementById("leave-form").style.display = "none";
+      document.getElementById("annual-leave-view").style.display = "none";
+      document.getElementById("leave-review-view").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "請假審核";
+      document.getElementById("leave-review-list").innerText = "讀取中...";
+    
+      try {
+        const url = gasUrl
+          + "?action=pendingLeaves"
+          + "&userId=" + encodeURIComponent(userId);
+    
+        const response = await fetch(url);
+        const result = await response.json();
+    
+        if (!result.success) {
+          document.getElementById("leave-review-list").innerText =
+            result.status || "無法讀取請假資料";
+          return;
+        }
+    
+        if (result.leaves.length === 0) {
+          document.getElementById("leave-review-list").innerText = "目前沒有待審核請假";
+          return;
+        }
+    
+        let html = "";
+    
+        result.leaves.forEach(function(item) {
+          html += `
+            <div style="text-align:left; border:1px solid #ddd; border-radius:8px; padding:12px; margin:12px 0;">
+              <strong>${item.name}</strong><br>
+              假別：${item.leaveType}<br>
+              時間：${item.startDate} ${item.startTime} - ${item.endDate} ${item.endTime}<br>
+              時數：${item.hours} 小時<br>
+              原因：${item.reason}<br>
+              <button class="btn-clock btn-on" onclick="reviewLeave(${item.rowNumber}, '已核准')">核准</button>
+              <button class="btn-clock btn-off" onclick="reviewLeave(${item.rowNumber}, '已駁回')">駁回</button>
+            </div>
+          `;
+        });
+    
+        document.getElementById("leave-review-list").innerHTML = html;
+    
+      } catch (error) {
+        document.getElementById("leave-review-list").innerText =
+          "讀取失敗：" + error.message;
+      }
+    }
+
+      function reviewLeave(rowNumber, decision) {
+        if (!confirm("確定要" + decision + "這筆請假嗎？")) {
+          return;
+        }
+      
+        submitToAppsScript({
+          action: "reviewLeave",
+          reviewerUserId: userId,
+          rowNumber: rowNumber,
+          decision: decision
+        });
+      
+        alert("已送出：" + decision);
+      
+        setTimeout(function() {
+          showLeaveReview();
+        }, 1000);
+      }
+    
     function showLeaveForm() {
       document.getElementById("home-menu").style.display = "none";
       document.getElementById("clock-menu").style.display = "none";
