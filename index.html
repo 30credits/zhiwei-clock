@@ -168,7 +168,6 @@
     </div> 
       
     <div id="leave-review-view" style="display: none;">
-      <h4>請假審核</h4>
       <div id="leave-review-list">讀取中...</div>
       <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
     </div>  
@@ -386,15 +385,20 @@
         let html = "";
     
         result.leaves.forEach(function(item) {
+          // 格式化日期時間（只取前10碼日期與時間）
+          const sDate = String(item.startDate).split("T")[0];
+          const sTime = String(item.startTime).includes("T") ? String(item.startTime).split("T")[1].substring(0, 5) : item.startTime;
+          const eDate = String(item.endDate).split("T")[0];
+          const eTime = String(item.endTime).includes("T") ? String(item.endTime).split("T")[1].substring(0, 5) : item.endTime;
+
           html += `
-            <div style="text-align:left; border:1px solid #ddd; border-radius:8px; padding:12px; margin:12px 0;">
-              <strong>${item.name}</strong><br>
-              假別：${item.leaveType}<br>
-              時間：${item.startDate} ${item.startTime} - ${item.endDate} ${item.endTime}<br>
-              時數：${item.hours} 小時<br>
-              原因：${item.reason}<br>
-              <button class="btn-clock btn-on" onclick="reviewLeave(${item.rowNumber}, '已核准')">核准</button>
-              <button class="btn-clock btn-off" onclick="reviewLeave(${item.rowNumber}, '已駁回')">駁回</button>
+            <div style="text-align:left; border:1px solid #e0e0e0; border-radius:10px; padding:15px; margin:12px 0; background-color:#fff;">
+              <div style="font-size:16px; font-weight:bold; margin-bottom:6px;">${item.name} <span style="font-size:14px; font-weight:normal; color:#666;">(${item.leaveType})</span></div>
+              <div style="font-size:14px; color:#444; margin-bottom:4px;"><strong>時間：</strong>${sDate} ${sTime} ~ ${eDate} ${eTime}</div>
+              <div style="font-size:14px; color:#444; margin-bottom:4px;"><strong>時數：</strong>${item.hours} 小時</div>
+              <div style="font-size:14px; color:#444; margin-bottom:12px;"><strong>原因：</strong>${item.reason}</div>
+              <button class="btn-clock btn-on" style="margin:5px 0;" onclick="reviewLeave(${item.rowNumber}, '已核准')">核准</button>
+              <button class="btn-clock btn-off" style="margin:5px 0;" onclick="reviewLeave(${item.rowNumber}, '已駁回')">駁回</button>
             </div>
           `;
         });
