@@ -109,7 +109,7 @@
   <div id="home-menu">
     <button class="btn-clock btn-on" onclick="showClockMenu()">打卡</button>
     <button class="btn-clock btn-blue" onclick="showLeaveForm()">請假</button>
-    <button class="btn-clock btn-purple" onclick="showComingSoon('查薪資表')">查薪資表</button>
+    <button class="btn-clock btn-purple" onclick="checkSalary()">查薪資表</button>
     <button class="btn-clock btn-gray" onclick="checkAnnualLeave()">查特休</button>
     <button id="review-leave-button" class="btn-clock btn-purple" style="display: none;" onclick="showLeaveReview()">請假審核</button>
   </div>
@@ -166,6 +166,11 @@
       <p id="annual-leave-result">查詢中...</p>
       <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
     </div> 
+
+    <div id="salary-view" style="display: none;">
+      <div id="salary-result">查詢中...</div>
+      <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
+    </div>
       
     <div id="leave-review-view" style="display: none;">
       <div id="leave-review-list">讀取中...</div>
@@ -297,6 +302,7 @@
       document.getElementById("leave-form").style.display = "none";
       document.getElementById("annual-leave-view").style.display = "none";
       document.getElementById("leave-review-view").style.display = "none";
+      document.getElementById("salary-view").style.display = "none"; // 🎯 新增這一行
       document.getElementById("home-menu").style.display = "block";
       document.getElementById("page-subtitle").innerText = "請選擇服務";
     }
@@ -304,6 +310,57 @@
     function showComingSoon(featureName) {
       alert(featureName + "功能下一步再做");
     }
+
+    async function checkSalary() {
+      document.getElementById("home-menu").style.display = "none";
+      document.getElementById("clock-menu").style.display = "none";
+      document.getElementById("leave-form").style.display = "none";
+      document.getElementById("annual-leave-view").style.display = "none";
+      document.getElementById("leave-review-view").style.display = "none";
+      document.getElementById("salary-view").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "薪資明細";
+      document.getElementById("salary-result").innerText = "查詢中...";
+
+      try {
+        const url = gasUrl
+          + "?action=salary"
+          + "&userId=" + encodeURIComponent(userId);
+
+        const response = await fetch(url);
+        const result = await response.json();
+
+        if (!result.success) {
+          document.getElementById("salary-result").innerText = result.status || "查無薪資紀錄";
+          return;
+        }
+
+        let html = "";
+        result.salaries.forEach(function(item) {
+          html += `
+            <div style="text-align:left; border:1px solid #e0e0e0; border-radius:10px; padding:15px; margin:12px 0; background:#fff;">
+              <div style="font-size:16px; font-weight:bold; color:#0d6efd; border-bottom:1px solid #eee; padding-bottom:6px; margin-bottom:8px;">
+                📅 ${item.month} 月份薪資單
+              </div>
+              <div style="font-size:14px; color:#444; margin:3px 0;">底薪：$${item.baseSalary}</div>
+              <div style="font-size:14px; color:#444; margin:3px 0;">加班費：+$${item.overtime}</div>
+              <div style="font-size:14px; color:#444; margin:3px 0;">獎金：+$${item.bonus}</div>
+              <div style="font-size:14px; color:#dc3545; margin:3px 0;">請假扣款：-$${item.leaveDeduction}</div>
+              <div style="font-size:14px; color:#dc3545; margin:3px 0;">勞保扣款：-$${item.laborInsurance}</div>
+              <div style="font-size:14px; color:#dc3545; margin:3px 0;">健保扣款：-$${item.healthInsurance}</div>
+              <div style="font-size:16px; font-weight:bold; color:#198754; margin-top:8px; border-top:1px dashed #eee; padding-top:6px;">
+                實領金額：$${item.netPay}
+              </div>
+            </div>
+          `;
+        });
+
+        document.getElementById("salary-result").innerHTML = html;
+
+      } catch (error) {
+        document.getElementById("salary-result").innerText = "查詢失敗：" + error.message;
+      }
+    }
+    
     async function checkAnnualLeave() {
       document.getElementById("home-menu").style.display = "none";
       document.getElementById("clock-menu").style.display = "none";
