@@ -358,38 +358,10 @@
           return;
         }
 
-        const item = result.salary;
-        let detailsHtml = "";
-
-        // 判斷非 0 / 非空白才顯示，且移除 $, +, - 符號
-        if (Number(item.baseSalary)) {
-          detailsHtml += `<div style="font-size:14px; color:#444; margin:4px 0;">底薪：${item.baseSalary}</div>`;
-        }
-        if (Number(item.overtime)) {
-          detailsHtml += `<div style="font-size:14px; color:#444; margin:4px 0;">加班費：${item.overtime}</div>`;
-        }
-        if (Number(item.bonus)) {
-          detailsHtml += `<div style="font-size:14px; color:#444; margin:4px 0;">獎金：${item.bonus}</div>`;
-        }
-        if (Number(item.leaveDeduction)) {
-          detailsHtml += `<div style="font-size:14px; color:#dc3545; margin:4px 0;">請假扣款：${item.leaveDeduction}</div>`;
-        }
-        if (Number(item.laborInsurance)) {
-          detailsHtml += `<div style="font-size:14px; color:#dc3545; margin:4px 0;">勞保扣款：${item.laborInsurance}</div>`;
-        }
-        if (Number(item.healthInsurance)) {
-          detailsHtml += `<div style="font-size:14px; color:#dc3545; margin:4px 0;">健保扣款：${item.healthInsurance}</div>`;
-        }
-
+        // 🎯 配合最新後端：直接顯示動態排版好的文字明細 (自動過濾0與空白，並分流正職/兼職)
         let html = `
-          <div style="text-align:left; border:1px solid #e0e0e0; border-radius:10px; padding:15px; margin:12px 0; background:#fff;">
-            <div style="font-size:16px; font-weight:bold; color:#0d6efd; border-bottom:1px solid #eee; padding-bottom:6px; margin-bottom:8px;">
-              📅 ${item.month} 月份薪資單
-            </div>
-            ${detailsHtml}
-            <div style="font-size:16px; font-weight:bold; color:#198754; margin-top:8px; border-top:1px dashed #eee; padding-top:6px;">
-              實領金額：${item.netPay || 0}
-            </div>
+          <div style="text-align:left; border:1px solid #e0e0e0; border-radius:10px; padding:15px; margin:12px 0; background:#fff; white-space: pre-line; line-height: 1.6;">
+            ${result.displayText}
           </div>
         `;
 
