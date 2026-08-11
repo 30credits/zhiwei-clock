@@ -55,16 +55,16 @@
       background-color: #0d6efd;
     }
 
-     .btn-purple {
-       background-color: #6f42c1;
+    .btn-purple {
+      background-color: #6f42c1;
     }
 
-     .btn-gray {
-       background-color: #6c757d;
+    .btn-gray {
+      background-color: #6c757d;
     }
 
     .btn-orange {
-       background-color: #fd7e14;
+      background-color: #fd7e14;
     }
 
     #loading {
@@ -72,7 +72,8 @@
       color: #6c757d;
       white-space: pre-line;
     }
-     .form-group {
+
+    .form-group {
       text-align: left;
       margin: 12px 0;
     }
@@ -116,7 +117,7 @@
         <button class="btn-clock btn-blue" onclick="showLeaveForm()">請假</button>
         <button class="btn-clock btn-purple" onclick="checkSalary()">查薪資表</button>
         <button class="btn-clock btn-gray" onclick="checkAnnualLeave()">查特休</button>
-        <!-- 🎯 新增買菜金按鈕 -->
+        <!-- 買菜金按鈕 -->
         <button class="btn-clock btn-orange" onclick="showPettyCashForm()">買菜金記帳</button>
         <button id="review-leave-button" class="btn-clock btn-purple" style="display: none;" onclick="showLeaveReview()">請假審核</button>
       </div>
@@ -193,7 +194,7 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>  
 
-           <!-- 🎯 買菜金記帳視圖 -->
+      <!-- 買菜金記帳視圖 -->
       <div id="petty-cash-form" style="display: none;">
         <div class="form-group" id="pc-category-group">
           <label for="pc-category">選擇分類</label>
@@ -237,7 +238,7 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
       
-      <!-- 自訂結果提示卡片（徹底隱藏 30credits.github.io 跳窗） -->
+      <!-- 自訂結果提示卡片（徹底無網址列） -->
       <div id="result-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 999;">
         <div style="background: white; padding: 20px; border-radius: 12px; width: 80%; max-width: 300px; text-align: center;">
           <h4 id="modal-title" style="margin-top: 0; color: #333;">記帳成功</h4>
@@ -245,6 +246,7 @@
           <button class="btn-clock btn-blue" style="margin: 0; padding: 10px;" onclick="closeModal()">確定</button>
         </div>
       </div>
+    </div>
   </div>
 
   <script>
@@ -304,14 +306,14 @@
             lng: lng
           });
 
-          alert(type + "打卡資料已送出，請到試算表確認紀錄。");
+          showCustomAlert("打卡成功", type + "打卡資料已送出！", true);
 
           if (liff.isInClient()) {
-            liff.closeWindow();
+            setTimeout(() => { liff.closeWindow(); }, 1200);
           }
         },
         function(error) {
-          alert("無法取得定位：" + error.message);
+          showCustomAlert("打卡失敗", "無法取得定位：" + error.message, false);
           resetUI();
         },
         { enableHighAccuracy: true, timeout: 10000 }
@@ -367,12 +369,12 @@
       document.getElementById("annual-leave-view").style.display = "none";
       document.getElementById("leave-review-view").style.display = "none";
       document.getElementById("salary-view").style.display = "none";
-      document.getElementById("petty-cash-form").style.display = "none"; // 🎯 關閉買菜金頁面
+      document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("home-menu").style.display = "block";
       document.getElementById("page-subtitle").innerText = "請選擇服務";
     }
 
-    // 🎯 買菜金相關控制邏輯
+    // 買菜金相關控制邏輯
     function showPettyCashForm() {
       document.getElementById("home-menu").style.display = "none";
       document.getElementById("clock-menu").style.display = "none";
@@ -383,25 +385,11 @@
       document.getElementById("petty-cash-form").style.display = "block";
       document.getElementById("page-subtitle").innerText = "買菜金記帳";
 
-      // 清空預設值
-      document.getElementById("pc-type").value = "支出";
       document.getElementById("pc-category").value = "春億(醬料)";
       document.getElementById("pc-custom-category").value = "";
       document.getElementById("pc-amount").value = "";
       document.getElementById("pc-note").value = "";
-      toggleCategoryMenu();
-    }
-
-    function toggleCategoryMenu() {
-      const type = document.getElementById("pc-type").value;
-      const catGroup = document.getElementById("pc-category-group");
-      if (type === "入金") {
-        catGroup.style.display = "none";
-        document.getElementById("pc-custom-category-group").style.display = "none";
-      } else {
-        catGroup.style.display = "block";
-        checkCustomCategory();
-      }
+      checkCustomCategory();
     }
 
     function checkCustomCategory() {
@@ -415,24 +403,21 @@
     }
 
     function submitPettyCash() {
-      const type = document.getElementById("pc-type").value;
       let category = document.getElementById("pc-category").value;
       const customCategory = document.getElementById("pc-custom-category").value.trim();
       const amount = document.getElementById("pc-amount").value;
       const note = document.getElementById("pc-note").value.trim();
 
-      if (type === "入金") {
-        category = "店主入金";
-      } else if (category === "其他") {
+      if (category === "其他") {
         if (!customCategory) {
-          alert("請輸入自訂分類名稱！");
+          showCustomAlert("提示", "請輸入自訂分類名稱！", false);
           return;
         }
         category = customCategory;
       }
 
       if (!amount || Number(amount) <= 0) {
-        alert("請輸入正確的金額！");
+        showCustomAlert("提示", "請輸入正確的金額！", false);
         return;
       }
 
@@ -440,13 +425,25 @@
         action: "pettyCash",
         name: userName,
         userId: userId,
-        type: type,
         category: category,
         amount: amount,
         note: note
       });
 
-      alert(type + "紀錄已送出！金額：" + amount + " 元");
+      const isDeposit = (category === "店主入金");
+      const actionText = isDeposit ? "入金" : "支出";
+      
+      showCustomAlert("記帳已送出", `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元`, true);
+    }
+
+    function showCustomAlert(title, msg, isSuccess) {
+      document.getElementById("modal-title").innerText = title;
+      document.getElementById("modal-msg").innerText = msg;
+      document.getElementById("result-modal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("result-modal").style.display = "none";
       showHomeMenu();
     }
 
@@ -622,7 +619,7 @@
         decision: decision
       });
 
-      alert("已送出：" + decision);
+      showCustomAlert("審核完成", "已送出：" + decision, true);
 
       setTimeout(function() {
         showLeaveReview();
@@ -645,17 +642,17 @@
       const endTime = document.getElementById("leave-end-time").value;
       const reason = document.getElementById("leave-reason").value.trim();
 
-      if (!startDate) { alert("請選擇開始日期"); return; }
-      if (!startTime) { alert("請選擇開始時間"); return; }
-      if (!endDate) { alert("請選擇結束日期"); return; }
-      if (!endTime) { alert("請選擇結束時間"); return; }
-      if (!reason) { alert("請輸入請假原因"); return; }
+      if (!startDate) { showCustomAlert("提示", "請選擇開始日期", false); return; }
+      if (!startTime) { showCustomAlert("提示", "請選擇開始時間", false); return; }
+      if (!endDate) { showCustomAlert("提示", "請選擇結束日期", false); return; }
+      if (!endTime) { showCustomAlert("提示", "請選擇結束時間", false); return; }
+      if (!reason) { showCustomAlert("提示", "請輸入請假原因", false); return; }
 
       const start = new Date(startDate + "T" + startTime + ":00");
       const end = new Date(endDate + "T" + endTime + ":00");
 
       if (end <= start) {
-        alert("結束時間必須晚於開始時間");
+        showCustomAlert("提示", "結束時間必須晚於開始時間", false);
         return;
       }
 
@@ -671,15 +668,13 @@
         reason: reason
       });
 
-      alert("請假申請已送出，狀態：待審核");
+      showCustomAlert("申請已送出", "請假申請已送出，狀態：待審核", true);
 
       document.getElementById("leave-start").value = "";
       document.getElementById("leave-start-time").value = "";
       document.getElementById("leave-end").value = "";
       document.getElementById("leave-end-time").value = "";
       document.getElementById("leave-reason").value = "";
-
-      showHomeMenu();
     }
 
     function setLoading(message) {
