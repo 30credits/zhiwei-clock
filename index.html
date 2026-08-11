@@ -193,16 +193,8 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>  
 
-      <!-- 🎯 新增買菜金記帳視圖 -->
+           <!-- 🎯 買菜金記帳視圖 -->
       <div id="petty-cash-form" style="display: none;">
-        <div class="form-group">
-          <label for="pc-type">交易類型</label>
-          <select id="pc-type" onchange="toggleCategoryMenu()">
-            <option value="支出">支出 (扣款)</option>
-            <option value="入金">入金 (補錢/放錢)</option>
-          </select>
-        </div>
-
         <div class="form-group" id="pc-category-group">
           <label for="pc-category">選擇分類</label>
           <select id="pc-category" onchange="checkCustomCategory()">
@@ -221,29 +213,38 @@
             <option value="瓦斯">瓦斯</option>
             <option value="冰">冰</option>
             <option value="卜健">卜健</option>
+            <option value="店主入金">💵 店主入金 (+錢)</option>
             <option value="其他">其他 (自行輸入)</option>
           </select>
         </div>
-
+      
         <div class="form-group" id="pc-custom-category-group" style="display: none;">
           <label for="pc-custom-category">自訂分類名稱</label>
           <input id="pc-custom-category" type="text" placeholder="請輸入自訂分類">
         </div>
-
+      
         <div class="form-group">
           <label for="pc-amount">金額</label>
           <input id="pc-amount" type="number" placeholder="請輸入金額">
         </div>
-
+      
         <div class="form-group">
           <label for="pc-note">備註 (可不填)</label>
           <input id="pc-note" type="text" placeholder="例：廠商收據號碼或說明">
         </div>
-
+      
         <button class="btn-clock btn-blue" onclick="submitPettyCash()">確認送出</button>
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
-    </div>
+      
+      <!-- 自訂結果提示卡片（徹底隱藏 30credits.github.io 跳窗） -->
+      <div id="result-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 999;">
+        <div style="background: white; padding: 20px; border-radius: 12px; width: 80%; max-width: 300px; text-align: center;">
+          <h4 id="modal-title" style="margin-top: 0; color: #333;">記帳成功</h4>
+          <p id="modal-msg" style="font-size: 15px; color: #555; white-space: pre-line; margin: 15px 0; line-height: 1.5;"></p>
+          <button class="btn-clock btn-blue" style="margin: 0; padding: 10px;" onclick="closeModal()">確定</button>
+        </div>
+      </div>
   </div>
 
   <script>
