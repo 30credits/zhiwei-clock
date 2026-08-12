@@ -402,7 +402,7 @@
       }
     }
 
-    async function submitPettyCash() {
+    function submitPettyCash() {
       let category = document.getElementById("pc-category").value;
       const customCategory = document.getElementById("pc-custom-category").value.trim();
       const amount = document.getElementById("pc-amount").value;
@@ -421,7 +421,7 @@
         return;
       }
 
-      // 送出資料給 Apps Script
+      // 1. 送出資料給 Apps Script 寫入試算表
       submitToAppsScript({
         action: "pettyCash",
         name: userName,
@@ -431,23 +431,35 @@
         note: note
       });
 
-      // 預測/顯示扣款結果與當前餘額
+      // 2. 判定是入金還是扣款
       const isDeposit = (category === "店主入金");
       const actionText = isDeposit ? "入金" : "支出";
 
-      // 查詢最新餘額並顯示在完成彈窗上
+      // 3. 立即呼叫 doGet 查詢試算表剛寫入的最新 F 欄餘額，並跳出顯示
       setTimeout(async () => {
         try {
           const url = gasUrl + "?action=getPettyCashBalance";
           const res = await fetch(url);
           const data = await res.json();
-          let balanceText = (data && data.success) ? `\n💰 目前剩餘金額：$${Number(data.balance).toLocaleString()} 元` : "";
-          
-          showCustomAlert("記帳已送出", `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元${balanceText}`, true);
+
+          let balanceMsg = "";
+          if (data && data.success) {
+            balanceMsg = `\n💰 目前買菜金餘額：$${Number(data.balance).toLocaleString()} 元`;
+          }
+
+          showCustomAlert(
+            "記帳成功", 
+            `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元${balanceMsg}`, 
+            true
+          );
         } catch(e) {
-          showCustomAlert("記帳已送出", `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元`, true);
+          showCustomAlert(
+            "記帳已送出", 
+            `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元`, 
+            true
+          );
         }
-      }, 500);
+      }, 800);
     }
 
     function showCustomAlert(title, msg, isSuccess) {
