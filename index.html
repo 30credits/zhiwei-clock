@@ -119,6 +119,7 @@
         <button class="btn-clock btn-gray" onclick="checkAnnualLeave()">查特休</button>
         <!-- 買菜金按鈕 -->
         <button class="btn-clock btn-orange" onclick="showPettyCashForm()">買菜金記帳</button>
+        <button class="btn-clock btn-purple" style="background-color: #20c997;" onclick="showSalesForm()">每日銷售紀錄</button>
         <button id="review-leave-button" class="btn-clock btn-purple" style="display: none;" onclick="showLeaveReview()">請假審核</button>
       </div>
 
@@ -218,6 +219,31 @@
             <option value="其他">其他 (自行輸入)</option>
           </select>
         </div>
+       <!-- 🎯 每日銷售紀錄視圖 -->
+      <div id="sales-form" style="display: none;">
+        <div class="form-group">
+          <label for="sales-soup">賣出羹數 (碗)</label>
+          <input id="sales-soup" type="number" placeholder="請輸入賣出羹數">
+        </div>
+      
+        <div class="form-group">
+          <label for="sales-rice">賣出飯數 (碗)</label>
+          <input id="sales-rice" type="number" placeholder="請輸入賣出飯數">
+        </div>
+      
+        <div class="form-group">
+          <label for="sales-expense">當日帳支出金額 (元)</label>
+          <input id="sales-expense" type="number" placeholder="無支出可填 0 或不填">
+        </div>
+      
+        <div class="form-group">
+          <label for="sales-note">備註 (可不填)</label>
+          <input id="sales-note" type="text" placeholder="例：天候狀況或特殊說明">
+        </div>
+      
+        <button class="btn-clock btn-blue" onclick="submitSales()">確認送出</button>
+        <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
+      </div> 
       
         <div class="form-group" id="pc-custom-category-group" style="display: none;">
           <label for="pc-custom-category">自訂分類名稱</label>
@@ -370,6 +396,7 @@
       document.getElementById("leave-review-view").style.display = "none";
       document.getElementById("salary-view").style.display = "none";
       document.getElementById("petty-cash-form").style.display = "none";
+      document.getElementById("sales-form").style.display = "none";
       document.getElementById("home-menu").style.display = "block";
       document.getElementById("page-subtitle").innerText = "請選擇服務";
     }
@@ -681,6 +708,48 @@
         showCustomAlert("提示", "結束時間必須晚於開始時間", false);
         return;
       }
+      
+     function showSalesForm() {
+        document.getElementById("home-menu").style.display = "none";
+        document.getElementById("clock-menu").style.display = "none";
+        document.getElementById("leave-form").style.display = "none";
+        document.getElementById("annual-leave-view").style.display = "none";
+        document.getElementById("leave-review-view").style.display = "none";
+        document.getElementById("salary-view").style.display = "none";
+        document.getElementById("petty-cash-form").style.display = "none";
+        document.getElementById("sales-form").style.display = "block";
+        document.getElementById("page-subtitle").innerText = "每日銷售紀錄";
+      
+        document.getElementById("sales-soup").value = "";
+        document.getElementById("sales-rice").value = "";
+        document.getElementById("sales-expense").value = "";
+        document.getElementById("sales-note").value = "";
+      }
+      
+      function submitSales() {
+        const soupCount = document.getElementById("sales-soup").value;
+        const riceCount = document.getElementById("sales-rice").value;
+        const expense = document.getElementById("sales-expense").value;
+        const note = document.getElementById("sales-note").value.trim();
+      
+        if (!soupCount && !riceCount) {
+          showCustomAlert("提示", "請至少填寫羹數或飯數！", false);
+          return;
+        }
+
+  submitToAppsScript({
+    action: "sales",
+    name: userName,
+    userId: userId,
+    soupCount: soupCount || 0,
+    riceCount: riceCount || 0,
+    expense: expense || 0,
+    note: note
+  });
+
+  const msg = `每日銷售紀錄已送出！\n羹：${soupCount || 0} 碗\n飯：${riceCount || 0} 碗\n支出：$${expense || 0} 元`;
+  showCustomAlert("登記成功", msg, true);
+} 
 
       submitToAppsScript({
         action: "leave",
