@@ -85,6 +85,18 @@
       min-height: 80px;
       resize: vertical;
     }
+
+    .summary-card {
+      background-color: #e8f5e9;
+      border: 1px solid #a5d6a7;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 15px;
+      text-align: left;
+      font-size: 14px;
+      color: #2e7d32;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -224,33 +236,37 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
 
-      <!-- 每日銷售紀錄視圖 -->
+      <!-- 🎯 每日銷售紀錄視圖 (新增今日紀錄卡片與調整備註標籤) -->
       <div id="sales-form" style="display: none;">
-        <div class="form-group">
-          <label for="sales-soup">賣出羹數</label>
-          <input id="sales-soup" type="number" placeholder="請輸入賣出羹數">
+        <div id="today-sales-summary" class="summary-card">
+          讀取今日已登記紀錄...
         </div>
 
         <div class="form-group">
-          <label for="sales-rice">賣出飯數</label>
-          <input id="sales-rice" type="number" placeholder="請輸入賣出飯數">
+          <label for="sales-soup">賣出羹數 (碗)</label>
+          <input id="sales-soup" type="number" step="0.01" placeholder="請輸入賣出羹數">
+        </div>
+
+        <div class="form-group">
+          <label for="sales-rice">賣出飯數 (碗)</label>
+          <input id="sales-rice" type="number" step="0.01" placeholder="請輸入賣出飯數">
         </div>
 
         <div class="form-group">
           <label for="sales-expense">當日帳支出金額 (元)</label>
-          <input id="sales-expense" type="number" placeholder="">
+          <input id="sales-expense" type="number" placeholder="無支出可不填">
         </div>
 
         <div class="form-group">
           <label for="sales-note">備註 (支出項目)</label>
-          <input id="sales-note" type="text" placeholder="">
+          <input id="sales-note" type="text" placeholder="例：虱目魚、油錢">
         </div>
 
         <button class="btn-clock btn-blue" onclick="submitSales()">確認送出</button>
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
 
-      <!-- 🎯 設備清潔紀錄視圖 -->
+      <!-- 🎯 設備清潔紀錄視圖 (已移除清潔項目選單) -->
       <div id="clean-form" style="display: none;">
         <div class="form-group">
           <label for="clean-device">選擇清潔設備</label>
@@ -263,22 +279,12 @@
             <option value="冷氣 (2)">冷氣 (2)</option>
           </select>
         </div>
-      
-        <div class="form-group">
-          <label for="clean-item">清潔項目</label>
-          <select id="clean-item">
-            <option value="內部層架擦拭/消毒">內部層架擦拭/消毒</option>
-            <option value="濾網/排水清理">濾網/排水清理</option>
-            <option value="外觀擦拭">外觀擦拭</option>
-            <option value="深度大清潔">深度大清潔</option>
-          </select>
-        </div>
-      
+
         <div class="form-group">
           <label for="clean-note">備註 (可不填)</label>
-          <input id="clean-note" type="text" placeholder="例：濾網已更新或異常說明">
+          <input id="clean-note" type="text" placeholder="例：異常說明或備註">
         </div>
-      
+
         <button class="btn-clock btn-blue" onclick="submitClean()">確認登記清潔</button>
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
@@ -428,6 +434,7 @@
       document.getElementById("leave-review-view").style.display = "none";
       document.getElementById("salary-view").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
+      document.getElementById("clean-form").style.display = "none";
       document.getElementById("petty-cash-form").style.display = "block";
       document.getElementById("page-subtitle").innerText = "買菜金記帳";
 
@@ -493,8 +500,8 @@
       }, 800);
     }
 
-    // 每日銷售紀錄邏輯
-    function showSalesForm() {
+    // 🎯 每日銷售紀錄邏輯 (含今日紀錄讀取)
+    async function showSalesForm() {
       document.getElementById("home-menu").style.display = "none";
       document.getElementById("clock-menu").style.display = "none";
       document.getElementById("leave-form").style.display = "none";
@@ -502,6 +509,7 @@
       document.getElementById("leave-review-view").style.display = "none";
       document.getElementById("salary-view").style.display = "none";
       document.getElementById("petty-cash-form").style.display = "none";
+      document.getElementById("clean-form").style.display = "none";
       document.getElementById("sales-form").style.display = "block";
       document.getElementById("page-subtitle").innerText = "每日銷售紀錄";
 
@@ -509,6 +517,41 @@
       document.getElementById("sales-rice").value = "";
       document.getElementById("sales-expense").value = "";
       document.getElementById("sales-note").value = "";
+
+      // 自動讀取今日已登記紀錄
+      fetchTodaySalesSummary();
+    }
+
+    async function fetchTodaySalesSummary() {
+      const summaryDiv = document.getElementById("today-sales-summary");
+      summaryDiv.innerText = "讀取今日已登記紀錄...";
+
+      const now = new Date();
+      const monthDayStr = `${now.getMonth() + 1}/${now.getDate()}`;
+
+      try {
+        const url = gasUrl + "?action=getTodaySales";
+        const res = await fetch(url);
+        const result = await res.json();
+
+        if (result.success) {
+          const data = result.data;
+          const soupText = data.soupList.length > 0 ? data.soupList.join(" + ") : "無";
+          const riceText = data.riceList.length > 0 ? data.riceList.join(" + ") : "無";
+          const expenseText = data.expenseList.length > 0 ? data.expenseList.join("  ") : "無";
+
+          summaryDiv.innerHTML = `
+            <strong>📌 今日 ${monthDayStr} 已記錄：</strong><br>
+            • 羹 = ${soupText}<br>
+            • 飯 = ${riceText}<br>
+            • 支出金額 = ${expenseText}
+          `;
+        } else {
+          summaryDiv.innerText = `📌 今日 ${monthDayStr} 尚無登記紀錄`;
+        }
+      } catch (e) {
+        summaryDiv.innerText = `📌 今日 ${monthDayStr} 紀錄讀取失敗`;
+      }
     }
 
     function submitSales() {
@@ -517,8 +560,8 @@
       const expense = document.getElementById("sales-expense").value;
       const note = document.getElementById("sales-note").value.trim();
 
-      if (!soupCount && !riceCount) {
-        showCustomAlert("提示", "請至少填寫羹數或飯數！", false);
+      if (!soupCount && !riceCount && !expense) {
+        showCustomAlert("提示", "請至少填寫羹數、飯數或支出金額！", false);
         return;
       }
 
@@ -532,40 +575,42 @@
         note: note
       });
 
-      const msg = `每日銷售紀錄已送出！\n羹：${soupCount || 0} 碗\n飯：${riceCount || 0} 碗\n支出：$${expense || 0} 元`;
+      const msg = `每日銷售紀錄已送出！\n羹：${soupCount || 0} 碗\n飯：${riceCount || 0} 碗\n支出：$${expense || 0} 元 ${note ? '(' + note + ')' : ''}`;
       showCustomAlert("登記成功", msg, true);
     }
 
-    // 🎯 設備清潔紀錄寫入函數
-function saveCleanData(info) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("清潔紀錄");
+    // 🎯 設備清潔紀錄邏輯
+    function showCleanForm() {
+      document.getElementById("home-menu").style.display = "none";
+      document.getElementById("clock-menu").style.display = "none";
+      document.getElementById("leave-form").style.display = "none";
+      document.getElementById("annual-leave-view").style.display = "none";
+      document.getElementById("leave-review-view").style.display = "none";
+      document.getElementById("salary-view").style.display = "none";
+      document.getElementById("petty-cash-form").style.display = "none";
+      document.getElementById("sales-form").style.display = "none";
+      document.getElementById("clean-form").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "設備清潔紀錄";
 
-  if (!sheet) {
-    return {
-      success: false,
-      status: "找不到『清潔紀錄』工作表，請先建立！"
-    };
-  }
+      document.getElementById("clean-device").value = "冰箱 A";
+      document.getElementById("clean-note").value = "";
+    }
 
-  var device = info.device || "未指定設備";
-  var item = info.item || "定期清潔";
-  var note = info.note || "";
+    function submitClean() {
+      const device = document.getElementById("clean-device").value;
+      const note = document.getElementById("clean-note").value.trim();
 
-  // 寫入資料列：[清潔時間, 登記人, 設備名稱, 清潔項目, 備註]
-  sheet.appendRow([
-    new Date(),
-    info.name,
-    device,
-    item,
-    note
-  ]);
+      submitToAppsScript({
+        action: "clean",
+        name: userName,
+        userId: userId,
+        device: device,
+        note: note
+      });
 
-  return {
-    success: true,
-    status: "清潔紀錄已登記！"
-  };
-}
+      const msg = `清潔紀錄已送出！\n設備：${device}`;
+      showCustomAlert("登記成功", msg, true);
+    }
 
     function showCustomAlert(title, msg, isSuccess) {
       document.getElementById("modal-title").innerText = title;
@@ -587,6 +632,7 @@ function saveCleanData(info) {
       document.getElementById("salary-view").style.display = "block";
       document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
+      document.getElementById("clean-form").style.display = "none";
       document.getElementById("page-subtitle").innerText = "薪資明細";
 
       const now = new Date();
@@ -644,6 +690,7 @@ function saveCleanData(info) {
       document.getElementById("salary-view").style.display = "none";
       document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
+      document.getElementById("clean-form").style.display = "none";
       document.getElementById("page-subtitle").innerText = "特休查詢";
       document.getElementById("annual-leave-result").innerText = "查詢中...";
 
@@ -697,6 +744,7 @@ function saveCleanData(info) {
       document.getElementById("salary-view").style.display = "none";
       document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
+      document.getElementById("clean-form").style.display = "none";
       document.getElementById("page-subtitle").innerText = "請假審核";
       document.getElementById("leave-review-list").innerText = "讀取中...";
 
@@ -774,44 +822,9 @@ function saveCleanData(info) {
       document.getElementById("salary-view").style.display = "none";
       document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
+      document.getElementById("clean-form").style.display = "none";
       document.getElementById("leave-form").style.display = "block";
       document.getElementById("page-subtitle").innerText = "請填寫請假申請";
-    }
-
-    // 清潔紀錄邏輯
-    function showCleanForm() {
-      document.getElementById("home-menu").style.display = "none";
-      document.getElementById("clock-menu").style.display = "none";
-      document.getElementById("leave-form").style.display = "none";
-      document.getElementById("annual-leave-view").style.display = "none";
-      document.getElementById("leave-review-view").style.display = "none";
-      document.getElementById("salary-view").style.display = "none";
-      document.getElementById("petty-cash-form").style.display = "none";
-      document.getElementById("sales-form").style.display = "none";
-      document.getElementById("clean-form").style.display = "block";
-      document.getElementById("page-subtitle").innerText = "設備清潔紀錄";
-    
-      document.getElementById("clean-device").value = "冰箱 A";
-      document.getElementById("clean-item").value = "內部層架擦拭/消毒";
-      document.getElementById("clean-note").value = "";
-    }
-    
-    function submitClean() {
-      const device = document.getElementById("clean-device").value;
-      const item = document.getElementById("clean-item").value;
-      const note = document.getElementById("clean-note").value.trim();
-    
-      submitToAppsScript({
-        action: "clean",
-        name: userName,
-        userId: userId,
-        device: device,
-        item: item,
-        note: note
-      });
-    
-      const msg = `清潔紀錄已送出！\n設備：${device}\n項目：${item}`;
-      showCustomAlert("登記成功", msg, true);
     }
 
     function submitLeave() {
