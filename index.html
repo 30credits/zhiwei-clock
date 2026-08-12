@@ -51,6 +51,7 @@
     .btn-gray { background-color: #6c757d; }
     .btn-orange { background-color: #fd7e14; }
     .btn-teal { background-color: #20c997; }
+    .btn-dark { background-color: #343a40; }
 
     #loading {
       font-size: 16px;
@@ -97,6 +98,36 @@
       color: #2e7d32;
       line-height: 1.6;
     }
+
+    /* 工作守則摺疊樣式 */
+    .rule-item {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .rule-header {
+      background-color: #f1f3f5;
+      padding: 12px 15px;
+      font-weight: bold;
+      color: #495057;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rule-content {
+      padding: 12px 15px;
+      font-size: 14px;
+      color: #333;
+      line-height: 1.6;
+      background-color: #fff;
+      border-top: 1px solid #dee2e6;
+      white-space: pre-line;
+    }
   </style>
 </head>
 <body>
@@ -117,6 +148,8 @@
         <button class="btn-clock btn-orange" onclick="showPettyCashForm()">買菜金記帳</button>
         <button class="btn-clock btn-teal" onclick="showSalesForm()">每日銷售紀錄</button>
         <button class="btn-clock btn-blue" style="background-color: #0dcaf0; color: #000;" onclick="showCleanForm()">設備清潔紀錄</button>
+        <!-- 🎯 新增工作守則按鈕 -->
+        <button class="btn-clock btn-dark" onclick="showRulesView()">工作守則</button>
         <button id="review-leave-button" class="btn-clock btn-purple" style="display: none;" onclick="showLeaveReview()">請假審核</button>
       </div>
 
@@ -236,7 +269,7 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
 
-      <!-- 🎯 每日銷售紀錄視圖 (新增今日紀錄卡片與調整備註標籤) -->
+      <!-- 每日銷售紀錄視圖 -->
       <div id="sales-form" style="display: none;">
         <div id="today-sales-summary" class="summary-card">
           讀取今日已登記紀錄...
@@ -266,7 +299,7 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
 
-      <!-- 🎯 設備清潔紀錄視圖 (已移除清潔項目選單) -->
+      <!-- 設備清潔紀錄視圖 -->
       <div id="clean-form" style="display: none;">
         <div class="form-group">
           <label for="clean-device">選擇清潔設備</label>
@@ -287,6 +320,47 @@
 
         <button class="btn-clock btn-blue" onclick="submitClean()">確認登記清潔</button>
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
+      </div>
+
+      <!-- 🎯 工作守則視圖 -->
+      <div id="rules-view" style="display: none;">
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-1')">
+            <span>一、出勤與打卡規範</span>
+            <span>▼</span>
+          </div>
+          <div id="rule-1" class="rule-content" style="display: none;">
+1. 上下班請務必使用系統即時定位打卡。
+2. 遲到或早退請提前向主管說明原因。
+3. 請假需於系統提早送出，待審核通過後始生效。
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-2')">
+            <span>二、店內衛生與食品安全</span>
+            <span>▼</span>
+          </div>
+          <div id="rule-2" class="rule-content" style="display: none;">
+1. 工作期間請配戴口罩與整潔服儀。
+2. 設備（冰箱、冷氣等）請依排程清洗並做系統登記。
+3. 食材務必遵循先進先出原則，確保品質。
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-3')">
+            <span>三、買菜金與財務規範</span>
+            <span>▼</span>
+          </div>
+          <div id="rule-3" class="rule-content" style="display: none;">
+1. 拿取買菜金支付廠商款項，請當下登打「買菜金記帳」。
+2. 每日營業結束時，請確實填寫「每日銷售紀錄」。
+3. 帳目需公開透明，維持誠信原則。
+          </div>
+        </div>
+
+        <button class="btn-clock btn-gray" style="margin-top: 15px;" onclick="showHomeMenu()">返回首頁</button>
       </div>
       
       <!-- 自訂結果提示卡片 -->
@@ -421,11 +495,12 @@
       document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
       document.getElementById("clean-form").style.display = "none";
+      document.getElementById("rules-view").style.display = "none";
       document.getElementById("home-menu").style.display = "block";
       document.getElementById("page-subtitle").innerText = "請選擇服務";
     }
 
-    // 買菜金相關邏輯
+    // 買菜金邏輯
     function showPettyCashForm() {
       document.getElementById("home-menu").style.display = "none";
       document.getElementById("clock-menu").style.display = "none";
@@ -435,6 +510,7 @@
       document.getElementById("salary-view").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
       document.getElementById("clean-form").style.display = "none";
+      document.getElementById("rules-view").style.display = "none";
       document.getElementById("petty-cash-form").style.display = "block";
       document.getElementById("page-subtitle").innerText = "買菜金記帳";
 
@@ -500,7 +576,7 @@
       }, 800);
     }
 
-    // 🎯 每日銷售紀錄邏輯 (含今日紀錄讀取)
+    // 每日銷售紀錄邏輯
     async function showSalesForm() {
       document.getElementById("home-menu").style.display = "none";
       document.getElementById("clock-menu").style.display = "none";
@@ -510,6 +586,7 @@
       document.getElementById("salary-view").style.display = "none";
       document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("clean-form").style.display = "none";
+      document.getElementById("rules-view").style.display = "none";
       document.getElementById("sales-form").style.display = "block";
       document.getElementById("page-subtitle").innerText = "每日銷售紀錄";
 
@@ -518,7 +595,6 @@
       document.getElementById("sales-expense").value = "";
       document.getElementById("sales-note").value = "";
 
-      // 自動讀取今日已登記紀錄
       fetchTodaySalesSummary();
     }
 
@@ -579,7 +655,7 @@
       showCustomAlert("登記成功", msg, true);
     }
 
-    // 🎯 設備清潔紀錄邏輯
+    // 設備清潔紀錄邏輯
     function showCleanForm() {
       document.getElementById("home-menu").style.display = "none";
       document.getElementById("clock-menu").style.display = "none";
@@ -589,6 +665,7 @@
       document.getElementById("salary-view").style.display = "none";
       document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
+      document.getElementById("rules-view").style.display = "none";
       document.getElementById("clean-form").style.display = "block";
       document.getElementById("page-subtitle").innerText = "設備清潔紀錄";
 
@@ -612,6 +689,30 @@
       showCustomAlert("登記成功", msg, true);
     }
 
+    // 🎯 工作守則邏輯
+    function showRulesView() {
+      document.getElementById("home-menu").style.display = "none";
+      document.getElementById("clock-menu").style.display = "none";
+      document.getElementById("leave-form").style.display = "none";
+      document.getElementById("annual-leave-view").style.display = "none";
+      document.getElementById("leave-review-view").style.display = "none";
+      document.getElementById("salary-view").style.display = "none";
+      document.getElementById("petty-cash-form").style.display = "none";
+      document.getElementById("sales-form").style.display = "none";
+      document.getElementById("clean-form").style.display = "none";
+      document.getElementById("rules-view").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "知味店務工作守則";
+    }
+
+    function toggleRule(id) {
+      const el = document.getElementById(id);
+      if (el.style.display === "none") {
+        el.style.display = "block";
+      } else {
+        el.style.display = "none";
+      }
+    }
+
     function showCustomAlert(title, msg, isSuccess) {
       document.getElementById("modal-title").innerText = title;
       document.getElementById("modal-msg").innerText = msg;
@@ -633,6 +734,7 @@
       document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
       document.getElementById("clean-form").style.display = "none";
+      document.getElementById("rules-view").style.display = "none";
       document.getElementById("page-subtitle").innerText = "薪資明細";
 
       const now = new Date();
@@ -691,6 +793,7 @@
       document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
       document.getElementById("clean-form").style.display = "none";
+      document.getElementById("rules-view").style.display = "none";
       document.getElementById("page-subtitle").innerText = "特休查詢";
       document.getElementById("annual-leave-result").innerText = "查詢中...";
 
@@ -745,6 +848,7 @@
       document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
       document.getElementById("clean-form").style.display = "none";
+      document.getElementById("rules-view").style.display = "none";
       document.getElementById("page-subtitle").innerText = "請假審核";
       document.getElementById("leave-review-list").innerText = "讀取中...";
 
@@ -823,6 +927,7 @@
       document.getElementById("petty-cash-form").style.display = "none";
       document.getElementById("sales-form").style.display = "none";
       document.getElementById("clean-form").style.display = "none";
+      document.getElementById("rules-view").style.display = "none";
       document.getElementById("leave-form").style.display = "block";
       document.getElementById("page-subtitle").innerText = "請填寫請假申請";
     }
