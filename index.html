@@ -104,6 +104,7 @@
         <button class="btn-clock btn-gray" onclick="checkAnnualLeave()">查特休</button>
         <button class="btn-clock btn-orange" onclick="showPettyCashForm()">買菜金記帳</button>
         <button class="btn-clock btn-teal" onclick="showSalesForm()">每日銷售紀錄</button>
+        <button class="btn-clock btn-blue" style="background-color: #0dcaf0; color: #000;" onclick="showCleanForm()">設備清潔紀錄</button>
         <button id="review-leave-button" class="btn-clock btn-purple" style="display: none;" onclick="showLeaveReview()">請假審核</button>
       </div>
 
@@ -246,6 +247,39 @@
         </div>
 
         <button class="btn-clock btn-blue" onclick="submitSales()">確認送出</button>
+        <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
+      </div>
+
+      <!-- 🎯 設備清潔紀錄視圖 -->
+      <div id="clean-form" style="display: none;">
+        <div class="form-group">
+          <label for="clean-device">選擇清潔設備</label>
+          <select id="clean-device">
+            <option value="冰箱 A">冰箱 A</option>
+            <option value="冰箱 B">冰箱 B</option>
+            <option value="冰箱 C">冰箱 C</option>
+            <option value="冰箱 D">冰箱 D</option>
+            <option value="冷氣 (1)">冷氣 (1)</option>
+            <option value="冷氣 (2)">冷氣 (2)</option>
+          </select>
+        </div>
+      
+        <div class="form-group">
+          <label for="clean-item">清潔項目</label>
+          <select id="clean-item">
+            <option value="內部層架擦拭/消毒">內部層架擦拭/消毒</option>
+            <option value="濾網/排水清理">濾網/排水清理</option>
+            <option value="外觀擦拭">外觀擦拭</option>
+            <option value="深度大清潔">深度大清潔</option>
+          </select>
+        </div>
+      
+        <div class="form-group">
+          <label for="clean-note">備註 (可不填)</label>
+          <input id="clean-note" type="text" placeholder="例：濾網已更新或異常說明">
+        </div>
+      
+        <button class="btn-clock btn-blue" onclick="submitClean()">確認登記清潔</button>
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
       
@@ -501,6 +535,37 @@
       showCustomAlert("登記成功", msg, true);
     }
 
+    // 🎯 設備清潔紀錄寫入函數
+function saveCleanData(info) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("清潔紀錄");
+
+  if (!sheet) {
+    return {
+      success: false,
+      status: "找不到『清潔紀錄』工作表，請先建立！"
+    };
+  }
+
+  var device = info.device || "未指定設備";
+  var item = info.item || "定期清潔";
+  var note = info.note || "";
+
+  // 寫入資料列：[清潔時間, 登記人, 設備名稱, 清潔項目, 備註]
+  sheet.appendRow([
+    new Date(),
+    info.name,
+    device,
+    item,
+    note
+  ]);
+
+  return {
+    success: true,
+    status: "清潔紀錄已登記！"
+  };
+}
+
     function showCustomAlert(title, msg, isSuccess) {
       document.getElementById("modal-title").innerText = title;
       document.getElementById("modal-msg").innerText = msg;
@@ -710,6 +775,42 @@
       document.getElementById("sales-form").style.display = "none";
       document.getElementById("leave-form").style.display = "block";
       document.getElementById("page-subtitle").innerText = "請填寫請假申請";
+    }
+
+    // 清潔紀錄邏輯
+    function showCleanForm() {
+      document.getElementById("home-menu").style.display = "none";
+      document.getElementById("clock-menu").style.display = "none";
+      document.getElementById("leave-form").style.display = "none";
+      document.getElementById("annual-leave-view").style.display = "none";
+      document.getElementById("leave-review-view").style.display = "none";
+      document.getElementById("salary-view").style.display = "none";
+      document.getElementById("petty-cash-form").style.display = "none";
+      document.getElementById("sales-form").style.display = "none";
+      document.getElementById("clean-form").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "設備清潔紀錄";
+    
+      document.getElementById("clean-device").value = "冰箱 A";
+      document.getElementById("clean-item").value = "內部層架擦拭/消毒";
+      document.getElementById("clean-note").value = "";
+    }
+    
+    function submitClean() {
+      const device = document.getElementById("clean-device").value;
+      const item = document.getElementById("clean-item").value;
+      const note = document.getElementById("clean-note").value.trim();
+    
+      submitToAppsScript({
+        action: "clean",
+        name: userName,
+        userId: userId,
+        device: device,
+        item: item,
+        note: note
+      });
+    
+      const msg = `清潔紀錄已送出！\n設備：${device}\n項目：${item}`;
+      showCustomAlert("登記成功", msg, true);
     }
 
     function submitLeave() {
