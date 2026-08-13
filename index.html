@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>知味員工系統</title>
-  <script src="[https://static.line-scdn.net/liff/edge/2/sdk.js](https://static.line-scdn.net/liff/edge/2/sdk.js)"></script>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <style>
     * { box-sizing: border-box; }
 
@@ -47,7 +47,6 @@
     .header-info h3 { margin: 0; font-size: 18px; color: #212529; }
     .header-info p { margin: 3px 0 0 0; font-size: 13px; color: #6c757d; }
 
-    /* 雙欄卡片網格 */
     .grid-menu {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -160,7 +159,7 @@
         </div>
       </div>
 
-      <!-- 🎯 美化版員工專區 (美觀雙欄網格) -->
+      <!-- 員工專區 -->
       <div id="staff-menu" style="display: none;">
         <div class="grid-menu">
           <div class="menu-card card-staff" onclick="showLeaveForm()">
@@ -189,7 +188,7 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
 
-      <!-- 🎯 請假表單 (支援全天/時段) -->
+      <!-- 請假表單 -->
       <div id="leave-form" class="sub-card" style="display: none;">
         <h4 style="margin-top:0;">請假申請</h4>
         <div class="form-group">
@@ -388,11 +387,11 @@
 
   <script>
     const liffId = "2010509536-AYeAZGh2";
-    const gasUrl = "[https://script.google.com/macros/s/AKfycbyYpWpgCNsoX490cCUpEryu8Jb8ShDg_frwZOwcDDh1RboTU-PsVpoTq8BSQxIfi2OuNA/exec](https://script.google.com/macros/s/AKfycbyYpWpgCNsoX490cCUpEryu8Jb8ShDg_frwZOwcDDh1RboTU-PsVpoTq8BSQxIfi2OuNA/exec)";
+    const gasUrl = "https://script.google.com/macros/s/AKfycbyYpWpgCNsoX490cCUpEryu8Jb8ShDg_frwZOwcDDh1RboTU-PsVpoTq8BSQxIfi2OuNA/exec";
 
     let userName = "";
     let userId = "";
-    let isErrorModal = false; // 🎯 標記彈窗是否為驗證錯誤
+    let isErrorModal = false;
 
     async function initLiff() {
       try {
@@ -526,7 +525,6 @@
       document.getElementById("page-subtitle").innerText = "請選擇打卡類型";
     }
 
-    // 🎯 請假時段輸入框切換
     function toggleLeaveTimeInputs() {
       const mode = document.getElementById("leave-mode").value;
       const startGroup = document.getElementById("leave-start-time-group");
@@ -547,7 +545,6 @@
       toggleLeaveTimeInputs();
     }
 
-    // 🎯 送出請假申請 (未填錯誤不自動關閉頁面)
     function submitLeave() {
       const leaveMode = document.getElementById("leave-mode").value;
       const leaveType = document.getElementById("leave-type").value;
@@ -585,7 +582,6 @@
       document.getElementById("leave-reason").value = "";
     }
 
-    // 🎯 送出加班申請 (未填錯誤不自動關閉頁面)
     function showOvertimeForm() {
       hideAllViews();
       document.getElementById("overtime-form").style.display = "block";
@@ -631,11 +627,10 @@
     function closeModal() {
       document.getElementById("result-modal").style.display = "none";
       if (!isErrorModal) {
-        showHomeMenu(); // 成功時退回首頁，驗證失敗跳錯時留在原頁面
+        showHomeMenu();
       }
     }
 
-    // 買菜金邏輯
     function showPettyCashForm() {
       hideAllViews();
       document.getElementById("petty-cash-form").style.display = "block";
@@ -699,7 +694,6 @@
       }, 800);
     }
 
-    // 每日銷售紀錄邏輯
     async function showSalesForm() {
       hideAllViews();
       document.getElementById("sales-form").style.display = "block";
@@ -770,7 +764,6 @@
       showCustomAlert("登記成功", msg, true, false);
     }
 
-    // 設備清潔紀錄邏輯
     function showCleanForm() {
       hideAllViews();
       document.getElementById("clean-form").style.display = "block";
@@ -796,7 +789,6 @@
       showCustomAlert("登記成功", msg, true, false);
     }
 
-    // 工作守則邏輯
     function showRulesView() {
       hideAllViews();
       document.getElementById("rules-view").style.display = "block";
@@ -979,7 +971,7 @@
 
     window.onload = function() {
       if (typeof liff === "undefined") {
-        setLoading("LIFF SDK 載入失敗");
+        setLoading("LIFF SDK 載入失敗，請確認網路連線或重新整理頁面");
         return;
       }
 
