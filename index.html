@@ -861,11 +861,11 @@
         const result = await response.json();
 
         if (result.success) {
-          document.getElementById("annual-leave-result").innerText =
-            "年度：" + result.year + "\n" +
-            "總特休：" + result.totalDays + "天\n" +
-            "已使用：" + result.usedHours + "小時\n" +
-            "剩餘：" + result.displayText;
+          document.getElementById("annual-leave-result").innerHTML =
+            `<b>年度：</b>${result.year} 年<br>` +
+            `<b>總特休：</b>${result.totalDays} 天 (${result.totalHours} 小時)<br>` +
+            `<b>已使用：</b>${result.usedHours} 小時<br>` +
+            `<b style="color: #198754; font-size: 16px;">剩餘特休：${result.displayText} (${result.remainingHours} 小時)</b>`;
         } else {
           document.getElementById("annual-leave-result").innerText =
             result.status || "查詢失敗";
