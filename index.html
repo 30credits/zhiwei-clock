@@ -885,8 +885,12 @@
         const response = await fetch(url);
         const result = await response.json();
 
+        // 只要後端回傳 success === true (代表有審核權限) 就將主管審核按鈕顯示出來
         if (result.success) {
-          document.getElementById("review-leave-button").style.display = "flex";
+          const btn = document.getElementById("review-leave-button");
+          if (btn) {
+            btn.style.display = "flex";
+          }
         }
       } catch (error) {
         console.log("審核權限檢查失敗", error);
