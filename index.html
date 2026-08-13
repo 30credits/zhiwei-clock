@@ -858,7 +858,15 @@
           + "&userId=" + encodeURIComponent(userId);
 
         const response = await fetch(url);
-        const result = await response.json();
+        const textData = await response.text();
+
+        // 防呆判斷：避免 GAS 回傳 HTML 錯誤頁面造成 Unexpected token '<' 崩潰
+        if (textData.startsWith("<")) {
+          document.getElementById("annual-leave-result").innerText = "系統連線忙碌中，請重新點擊查詢！";
+          return;
+        }
+
+        const result = JSON.parse(textData);
 
         if (result.success) {
           document.getElementById("annual-leave-result").innerHTML =
@@ -872,7 +880,7 @@
         }
       } catch (error) {
         document.getElementById("annual-leave-result").innerText =
-          "查詢失敗：" + error.message;
+          "查詢失敗，請重新再試一次。";
       }
     }
 
