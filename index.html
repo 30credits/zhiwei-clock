@@ -4,11 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>知味員工系統</title>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script src="[https://static.line-scdn.net/liff/edge/2/sdk.js](https://static.line-scdn.net/liff/edge/2/sdk.js)"></script>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       background-color: #f4f6f9;
@@ -27,7 +25,6 @@
       margin: 0 auto;
     }
 
-    /* 頂部個人資訊區塊 */
     .header-card {
       background: #ffffff;
       border-radius: 16px;
@@ -47,19 +44,10 @@
       object-fit: cover;
     }
 
-    .header-info h3 {
-      margin: 0;
-      font-size: 18px;
-      color: #212529;
-    }
+    .header-info h3 { margin: 0; font-size: 18px; color: #212529; }
+    .header-info p { margin: 3px 0 0 0; font-size: 13px; color: #6c757d; }
 
-    .header-info p {
-      margin: 3px 0 0 0;
-      font-size: 13px;
-      color: #6c757d;
-    }
-
-    /* 雙欄卡片網格布局 */
+    /* 雙欄卡片網格 */
     .grid-menu {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -70,7 +58,7 @@
     .menu-card {
       background: #ffffff;
       border-radius: 16px;
-      padding: 20px 12px;
+      padding: 22px 12px;
       text-align: center;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
       border: 1px solid #e9ecef;
@@ -79,36 +67,22 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: transform 0.1s, background-color 0.1s;
-      min-height: 105px;
+      transition: transform 0.1s;
+      min-height: 110px;
     }
 
-    .menu-card:active {
-      transform: scale(0.97);
-      background-color: #f8f9fa;
-    }
+    .menu-card:active { transform: scale(0.97); background-color: #f8f9fa; }
+    .menu-card .icon { font-size: 28px; margin-bottom: 8px; }
+    .menu-card .title { font-size: 16px; font-weight: 700; color: #343a40; }
 
-    .menu-card .icon {
-      font-size: 26px;
-      margin-bottom: 6px;
-    }
-
-    .menu-card .title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #343a40;
-    }
-
-    /* 主題色彩邊條 Accent */
     .card-clock { border-top: 5px solid #198754; }
     .card-staff { border-top: 5px solid #0d6efd; }
     .card-sales { border-top: 5px solid #20c997; }
     .card-petty { border-top: 5px solid #fd7e14; }
     .card-clean { border-top: 5px solid #0dcaf0; }
     .card-rules { border-top: 5px solid #6c757d; }
-    .card-purple { border-top: 5px solid #6f42c1; }
+    .card-sub { border-top: 5px solid #6f42c1; }
 
-    /* 通用容器與表單 */
     .sub-card {
       background: #ffffff;
       border-radius: 16px;
@@ -134,100 +108,20 @@
     .btn-blue { background-color: #0d6efd; }
     .btn-purple { background-color: #6f42c1; }
     .btn-gray { background-color: #6c757d; }
-    .btn-orange { background-color: #fd7e14; }
     .btn-teal { background-color: #20c997; }
 
-    .form-group {
-      text-align: left;
-      margin: 12px 0;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #495057;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ced4da;
-      border-radius: 8px;
-      font-size: 15px;
+    .form-group { text-align: left; margin: 12px 0; }
+    .form-group label { display: block; font-size: 14px; margin-bottom: 6px; font-weight: 600; color: #495057; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-size: 15px;
     }
 
     .summary-card {
-      background-color: #e8f5e9;
-      border: 1px solid #a5d6a7;
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 15px;
-      text-align: left;
-      font-size: 14px;
-      color: #2e7d32;
-      line-height: 1.6;
+      background-color: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 10px;
+      padding: 12px; margin-bottom: 15px; text-align: left; font-size: 14px; color: #2e7d32; line-height: 1.6;
     }
 
-    .rule-item {
-      border: 1px solid #dee2e6;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      overflow: hidden;
-      text-align: left;
-    }
-
-    .rule-header {
-      background-color: #f1f3f5;
-      padding: 12px 15px;
-      font-weight: bold;
-      color: #495057;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .rule-content {
-      padding: 12px 15px;
-      font-size: 14px;
-      color: #333;
-      line-height: 1.6;
-      background-color: #fff;
-      border-top: 1px solid #dee2e6;
-      white-space: pre-line;
-    }
-
-    #loading {
-      text-align: center;
-      margin-top: 40px;
-      color: #6c757d;
-    }
-
-    .mode-selector {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .mode-btn {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ced4da;
-      background: #f8f9fa;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .mode-btn.active {
-      background: #0d6efd;
-      color: white;
-      border-color: #0d6efd;
-    }
+    #loading { text-align: center; margin-top: 40px; color: #6c757d; }
   </style>
 </head>
 <body>
@@ -236,7 +130,6 @@
     <div id="loading">系統啟動中，請稍候...知味員工系統</div>
 
     <div id="main-content" style="display: none;">
-      <!-- 個人頂部欄 -->
       <div class="header-card">
         <img id="user-picture" class="profile-img" src="" alt="頭像">
         <div class="header-info">
@@ -245,65 +138,45 @@
         </div>
       </div>
 
-      <!-- 首頁 6 大滿版卡片選單 -->
+      <!-- 主選單 -->
       <div id="home-menu" class="grid-menu">
         <div class="menu-card card-clock" onclick="showClockMenu()">
-          <div class="icon">⏰</div>
-          <div class="title">打卡系統</div>
+          <div class="icon">⏰</div><div class="title">打卡系統</div>
         </div>
-
         <div class="menu-card card-staff" onclick="showStaffMenu()">
-          <div class="icon">👤</div>
-          <div class="title">員工專區</div>
+          <div class="icon">👤</div><div class="title">員工專區</div>
         </div>
-
         <div class="menu-card card-sales" onclick="showSalesForm()">
-          <div class="icon">📊</div>
-          <div class="title">每日銷售紀錄</div>
+          <div class="icon">📊</div><div class="title">每日銷售紀錄</div>
         </div>
-
         <div class="menu-card card-petty" onclick="showPettyCashForm()">
-          <div class="icon">💵</div>
-          <div class="title">買菜金記帳</div>
+          <div class="icon">💵</div><div class="title">買菜金記帳</div>
         </div>
-
         <div class="menu-card card-clean" onclick="showCleanForm()">
-          <div class="icon">🧹</div>
-          <div class="title">設備清潔紀錄</div>
+          <div class="icon">🧹</div><div class="title">設備清潔紀錄</div>
         </div>
-
         <div class="menu-card card-rules" onclick="showRulesView()">
-          <div class="icon">📖</div>
-          <div class="title">工作守則</div>
+          <div class="icon">📖</div><div class="title">工作守則</div>
         </div>
       </div>
 
-      <!-- 🎯 美化後的員工專區 (網格大卡片) -->
+      <!-- 🎯 美化版員工專區 (美觀雙欄網格) -->
       <div id="staff-menu" style="display: none;">
         <div class="grid-menu">
           <div class="menu-card card-staff" onclick="showLeaveForm()">
-            <div class="icon">📝</div>
-            <div class="title">請假申請</div>
+            <div class="icon">📝</div><div class="title">請假申請</div>
           </div>
-
           <div class="menu-card card-sales" onclick="showOvertimeForm()">
-            <div class="icon">⚡</div>
-            <div class="title">加班申請</div>
+            <div class="icon">⏳</div><div class="title">加班申請</div>
           </div>
-
-          <div class="menu-card card-purple" onclick="checkSalary()">
-            <div class="icon">💰</div>
-            <div class="title">薪資查詢</div>
+          <div class="menu-card card-sub" onclick="checkSalary()">
+            <div class="icon">💰</div><div class="title">薪資查詢</div>
           </div>
-
           <div class="menu-card card-rules" onclick="checkAnnualLeave()">
-            <div class="icon">📅</div>
-            <div class="title">特休查詢</div>
+            <div class="icon">🌴</div><div class="title">特休查詢</div>
           </div>
-
-          <div id="review-card" class="menu-card card-petty" style="display: none; grid-column: span 2;" onclick="showLeaveReview()">
-            <div class="icon">⚙️</div>
-            <div class="title">主管審核</div>
+          <div id="review-leave-button" class="menu-card card-petty" style="display: none; grid-column: span 2;" onclick="showLeaveReview()">
+            <div class="icon">🔍</div><div class="title">主管審核</div>
           </div>
         </div>
         <button class="btn-clock btn-gray" style="margin-top: 15px;" onclick="showHomeMenu()">返回首頁</button>
@@ -316,18 +189,16 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
 
-      <!-- 🎯 升級後的請假表單 (支援整天/時段) -->
+      <!-- 🎯 請假表單 (支援全天/時段) -->
       <div id="leave-form" class="sub-card" style="display: none;">
         <h4 style="margin-top:0;">請假申請</h4>
-        
         <div class="form-group">
-          <label>請假模式</label>
-          <div class="mode-selector">
-            <div id="mode-day-btn" class="mode-btn active" onclick="setLeaveMode('day')">全天 (整日)</div>
-            <div id="mode-time-btn" class="mode-btn" onclick="setLeaveMode('time')">指定時段</div>
-          </div>
+          <label for="leave-mode">請假範圍</label>
+          <select id="leave-mode" onchange="toggleLeaveTimeInputs()">
+            <option value="時段">時段請假 (指定小時)</option>
+            <option value="整天">整天請假 (自動扣除3小時休息)</option>
+          </select>
         </div>
-
         <div class="form-group">
           <label for="leave-type">假別</label>
           <select id="leave-type">
@@ -338,29 +209,22 @@
             <option value="其他">其他</option>
           </select>
         </div>
-
         <div class="form-group">
           <label for="leave-start">開始日期</label>
           <input id="leave-start" type="date">
         </div>
-
-        <div id="time-range-block" style="display: none;">
-          <div class="form-group">
-            <label for="leave-start-time">開始時間</label>
-            <input id="leave-start-time" type="time">
-          </div>
-
-          <div class="form-group">
-            <label for="leave-end">結束日期</label>
-            <input id="leave-end" type="date">
-          </div>
-
-          <div class="form-group">
-            <label for="leave-end-time">結束時間</label>
-            <input id="leave-end-time" type="time">
-          </div>
+        <div class="form-group" id="leave-start-time-group">
+          <label for="leave-start-time">開始時間</label>
+          <input id="leave-start-time" type="time">
         </div>
-
+        <div class="form-group">
+          <label for="leave-end">結束日期</label>
+          <input id="leave-end" type="date">
+        </div>
+        <div class="form-group" id="leave-end-time-group">
+          <label for="leave-end-time">結束時間</label>
+          <input id="leave-end-time" type="time">
+        </div>
         <div class="form-group">
           <label for="leave-reason">原因</label>
           <textarea id="leave-reason" placeholder="請輸入請假原因"></textarea>
@@ -394,7 +258,7 @@
 
       <!-- 特休視圖 -->
       <div id="annual-leave-view" class="sub-card" style="display: none;">
-        <h4>特休查詢</h4>
+        <h4>我的特休</h4>
         <p id="annual-leave-result">查詢中...</p>
         <button class="btn-clock btn-gray" onclick="showStaffMenu()">返回員工專區</button>
       </div> 
@@ -409,9 +273,8 @@
         <button class="btn-clock btn-gray" onclick="showStaffMenu()">返回員工專區</button>
       </div>
           
-      <!-- 主管審核視圖 (支援請假與加班) -->
+      <!-- 主管審核視圖 -->
       <div id="leave-review-view" class="sub-card" style="display: none;">
-        <h4 style="margin-top:0;">主管審核區</h4>
         <div id="leave-review-list">讀取中...</div>
         <button class="btn-clock btn-gray" onclick="showStaffMenu()">返回員工專區</button>
       </div>  
@@ -458,9 +321,7 @@
 
       <!-- 每日銷售紀錄視圖 -->
       <div id="sales-form" class="sub-card" style="display: none;">
-        <div id="today-sales-summary" class="summary-card">
-          讀取今日已登記紀錄...
-        </div>
+        <div id="today-sales-summary" class="summary-card">讀取今日已登記紀錄...</div>
         <div class="form-group">
           <label for="sales-soup">賣出羹數 (碗)</label>
           <input id="sales-soup" type="number" step="0.01" placeholder="請輸入賣出羹數">
@@ -504,43 +365,20 @@
 
       <!-- 工作守則視圖 -->
       <div id="rules-view" class="sub-card" style="display: none;">
-        <div class="rule-item">
-          <div class="rule-header" onclick="toggleRule('rule-1')">
-            <span>一、出勤與打卡規範</span><span>▼</span>
-          </div>
-          <div id="rule-1" class="rule-content" style="display: none;">
-1. 上下班請務必使用系統即時定位打卡。
-2. 遲到或早退請提前向主管說明原因。
-3. 請假需於系統提早送出，待審核通過後始生效。
-          </div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-header" onclick="toggleRule('rule-2')">
-            <span>二、店內衛生與食品安全</span><span>▼</span>
-          </div>
-          <div id="rule-2" class="rule-content" style="display: none;">
-1. 工作期間請配戴口罩與整潔服儀。
-2. 設備（冰箱、冷氣等）請依排程清洗並做系統登記。
-3. 食材務必遵循先進先出原則，確保品質。
-          </div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-header" onclick="toggleRule('rule-3')">
-            <span>三、買菜金與財務規範</span><span>▼</span>
-          </div>
-          <div id="rule-3" class="rule-content" style="display: none;">
-1. 拿取買菜金支付廠商款項，請當下登打「買菜金記帳」。
-2. 每日營業結束時，請確實填寫「每日銷售紀錄」。
-3. 帳目需公開透明，維持誠信原則。
-          </div>
-        </div>
+        <h4>知味店務工作守則</h4>
+        <p style="font-size: 14px; color: #555; line-height: 1.6;">
+          1. 上下班請確實打卡，遲到早退請事先說明。<br>
+          2. 請假與加班申請請提前於系統送出待主管審核。<br>
+          3. 買菜金與每日銷售紀錄請當天正確登打。<br>
+          4. 設備清潔請依規定定期保養與登記。
+        </p>
         <button class="btn-clock btn-gray" style="margin-top: 15px;" onclick="showHomeMenu()">返回首頁</button>
       </div>
       
       <!-- 自訂結果提示卡片 -->
       <div id="result-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 999;">
         <div style="background: white; padding: 20px; border-radius: 12px; width: 80%; max-width: 300px; text-align: center;">
-          <h4 id="modal-title" style="margin-top: 0; color: #333;">提示</h4>
+          <h4 id="modal-title" style="margin-top: 0; color: #333;">登記成功</h4>
           <p id="modal-msg" style="font-size: 15px; color: #555; white-space: pre-line; margin: 15px 0; line-height: 1.5;"></p>
           <button class="btn-clock btn-blue" style="margin: 0; padding: 10px;" onclick="closeModal()">確定</button>
         </div>
@@ -550,12 +388,11 @@
 
   <script>
     const liffId = "2010509536-AYeAZGh2";
-    const gasUrl = "https://script.google.com/macros/s/AKfycbyYpWpgCNsoX490cCUpEryu8Jb8ShDg_frwZOwcDDh1RboTU-PsVpoTq8BSQxIfi2OuNA/exec";
+    const gasUrl = "[https://script.google.com/macros/s/AKfycbyYpWpgCNsoX490cCUpEryu8Jb8ShDg_frwZOwcDDh1RboTU-PsVpoTq8BSQxIfi2OuNA/exec](https://script.google.com/macros/s/AKfycbyYpWpgCNsoX490cCUpEryu8Jb8ShDg_frwZOwcDDh1RboTU-PsVpoTq8BSQxIfi2OuNA/exec)";
 
     let userName = "";
     let userId = "";
-    let currentLeaveMode = "day"; // 'day' 或 'time'
-    let modalRedirectCallback = null;
+    let isErrorModal = false; // 🎯 標記彈窗是否為驗證錯誤
 
     async function initLiff() {
       try {
@@ -605,13 +442,11 @@
             lng: lng
           });
 
-          showCustomAlert("打卡成功", type + "打卡資料已送出！", true, function() {
-            if (liff.isInClient()) {
-              liff.closeWindow();
-            } else {
-              showHomeMenu();
-            }
-          });
+          showCustomAlert("打卡成功", type + "打卡資料已送出！", true);
+
+          if (liff.isInClient()) {
+            setTimeout(() => { liff.closeWindow(); }, 1200);
+          }
         },
         function(error) {
           showCustomAlert("打卡失敗", "無法取得定位：" + error.message, false);
@@ -691,6 +526,115 @@
       document.getElementById("page-subtitle").innerText = "請選擇打卡類型";
     }
 
+    // 🎯 請假時段輸入框切換
+    function toggleLeaveTimeInputs() {
+      const mode = document.getElementById("leave-mode").value;
+      const startGroup = document.getElementById("leave-start-time-group");
+      const endGroup = document.getElementById("leave-end-time-group");
+      if (mode === "整天") {
+        startGroup.style.display = "none";
+        endGroup.style.display = "none";
+      } else {
+        startGroup.style.display = "block";
+        endGroup.style.display = "block";
+      }
+    }
+
+    function showLeaveForm() {
+      hideAllViews();
+      document.getElementById("leave-form").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "請填寫請假申請";
+      toggleLeaveTimeInputs();
+    }
+
+    // 🎯 送出請假申請 (未填錯誤不自動關閉頁面)
+    function submitLeave() {
+      const leaveMode = document.getElementById("leave-mode").value;
+      const leaveType = document.getElementById("leave-type").value;
+      const startDate = document.getElementById("leave-start").value;
+      const startTime = document.getElementById("leave-start-time").value;
+      const endDate = document.getElementById("leave-end").value;
+      const endTime = document.getElementById("leave-end-time").value;
+      const reason = document.getElementById("leave-reason").value.trim();
+
+      if (!startDate) { showCustomAlert("提示", "請選擇開始日期", false, true); return; }
+      if (leaveMode === "時段" && !startTime) { showCustomAlert("提示", "請選擇開始時間", false, true); return; }
+      if (!endDate) { showCustomAlert("提示", "請選擇結束日期", false, true); return; }
+      if (leaveMode === "時段" && !endTime) { showCustomAlert("提示", "請選擇結束時間", false, true); return; }
+      if (!reason) { showCustomAlert("提示", "請輸入請假原因", false, true); return; }
+
+      submitToAppsScript({
+        action: "leave",
+        name: userName,
+        userId: userId,
+        leaveMode: leaveMode,
+        leaveType: leaveType,
+        startDate: startDate,
+        startTime: startTime || "00:00",
+        endDate: endDate,
+        endTime: endTime || "23:59",
+        reason: reason
+      });
+
+      showCustomAlert("申請已送出", "請假申請已送出，狀態：待審核", true, false);
+
+      document.getElementById("leave-start").value = "";
+      document.getElementById("leave-start-time").value = "";
+      document.getElementById("leave-end").value = "";
+      document.getElementById("leave-end-time").value = "";
+      document.getElementById("leave-reason").value = "";
+    }
+
+    // 🎯 送出加班申請 (未填錯誤不自動關閉頁面)
+    function showOvertimeForm() {
+      hideAllViews();
+      document.getElementById("overtime-form").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "請填寫加班申請";
+    }
+
+    function submitOvertime() {
+      const overtimeDate = document.getElementById("overtime-date").value;
+      const startTime = document.getElementById("overtime-start-time").value;
+      const endTime = document.getElementById("overtime-end-time").value;
+      const reason = document.getElementById("overtime-reason").value.trim();
+
+      if (!overtimeDate) { showCustomAlert("提示", "請選擇加班日期", false, true); return; }
+      if (!startTime) { showCustomAlert("提示", "請選擇開始時間", false, true); return; }
+      if (!endTime) { showCustomAlert("提示", "請選擇結束時間", false, true); return; }
+      if (!reason) { showCustomAlert("提示", "請輸入加班原因", false, true); return; }
+
+      submitToAppsScript({
+        action: "overtime",
+        name: userName,
+        userId: userId,
+        overtimeDate: overtimeDate,
+        startTime: startTime,
+        endTime: endTime,
+        reason: reason
+      });
+
+      showCustomAlert("申請已送出", "加班申請已送出，狀態：待審核", true, false);
+
+      document.getElementById("overtime-date").value = "";
+      document.getElementById("overtime-start-time").value = "";
+      document.getElementById("overtime-end-time").value = "";
+      document.getElementById("overtime-reason").value = "";
+    }
+
+    function showCustomAlert(title, msg, isSuccess, isError = false) {
+      isErrorModal = isError;
+      document.getElementById("modal-title").innerText = title;
+      document.getElementById("modal-msg").innerText = msg;
+      document.getElementById("result-modal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("result-modal").style.display = "none";
+      if (!isErrorModal) {
+        showHomeMenu(); // 成功時退回首頁，驗證失敗跳錯時留在原頁面
+      }
+    }
+
     // 買菜金邏輯
     function showPettyCashForm() {
       hideAllViews();
@@ -718,14 +662,14 @@
 
       if (category === "其他") {
         if (!customCategory) {
-          showCustomAlert("提示", "請輸入自訂分類名稱！", false);
+          showCustomAlert("提示", "請輸入自訂分類名稱！", false, true);
           return;
         }
         category = customCategory;
       }
 
       if (!amount || Number(amount) <= 0) {
-        showCustomAlert("提示", "請輸入正確的金額！", false);
+        showCustomAlert("提示", "請輸入正確的金額！", false, true);
         return;
       }
 
@@ -748,9 +692,9 @@
           const data = await res.json();
           let balanceMsg = (data && data.success) ? `\n💰 目前買菜金餘額：$${Number(data.balance).toLocaleString()} 元` : "";
           
-          showCustomAlert("記帳成功", `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元${balanceMsg}`, true, showHomeMenu);
+          showCustomAlert("記帳成功", `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元${balanceMsg}`, true, false);
         } catch(e) {
-          showCustomAlert("記帳已送出", `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元`, true, showHomeMenu);
+          showCustomAlert("記帳已送出", `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元`, true, false);
         }
       }, 800);
     }
@@ -808,7 +752,7 @@
       const note = document.getElementById("sales-note").value.trim();
 
       if (!soupCount && !riceCount && !expense) {
-        showCustomAlert("提示", "請至少填寫羹數、飯數或支出金額！", false);
+        showCustomAlert("提示", "請至少填寫羹數、飯數或支出金額！", false, true);
         return;
       }
 
@@ -823,7 +767,7 @@
       });
 
       const msg = `每日銷售紀錄已送出！\n羹：${soupCount || 0} 碗\n飯：${riceCount || 0} 碗\n支出：$${expense || 0} 元 ${note ? '(' + note + ')' : ''}`;
-      showCustomAlert("登記成功", msg, true, showHomeMenu);
+      showCustomAlert("登記成功", msg, true, false);
     }
 
     // 設備清潔紀錄邏輯
@@ -849,7 +793,7 @@
       });
 
       const msg = `清潔紀錄已送出！\n設備：${device}`;
-      showCustomAlert("登記成功", msg, true, showHomeMenu);
+      showCustomAlert("登記成功", msg, true, false);
     }
 
     // 工作守則邏輯
@@ -857,135 +801,6 @@
       hideAllViews();
       document.getElementById("rules-view").style.display = "block";
       document.getElementById("page-subtitle").innerText = "知味店務工作守則";
-    }
-
-    function toggleRule(id) {
-      const el = document.getElementById(id);
-      el.style.display = (el.style.display === "none") ? "block" : "none";
-    }
-
-    // 🎯 請假模式切換邏輯 (整天/時段)
-    function setLeaveMode(mode) {
-      currentLeaveMode = mode;
-      const dayBtn = document.getElementById("mode-day-btn");
-      const timeBtn = document.getElementById("mode-time-btn");
-      const timeBlock = document.getElementById("time-range-block");
-
-      if (mode === "day") {
-        dayBtn.classList.add("active");
-        timeBtn.classList.remove("active");
-        timeBlock.style.display = "none";
-      } else {
-        timeBtn.classList.add("active");
-        dayBtn.classList.remove("active");
-        timeBlock.style.display = "block";
-      }
-    }
-
-    function showLeaveForm() {
-      hideAllViews();
-      document.getElementById("leave-form").style.display = "block";
-      document.getElementById("page-subtitle").innerText = "請填寫請假申請";
-      setLeaveMode("day");
-    }
-
-    function submitLeave() {
-      const leaveType = document.getElementById("leave-type").value;
-      const startDate = document.getElementById("leave-start").value;
-      const startTime = document.getElementById("leave-start-time").value;
-      const endDate = document.getElementById("leave-end").value;
-      const endTime = document.getElementById("leave-end-time").value;
-      const reason = document.getElementById("leave-reason").value.trim();
-
-      if (!startDate) { showCustomAlert("提示", "請選擇日期", false); return; }
-
-      if (currentLeaveMode === "time") {
-        if (!startTime) { showCustomAlert("提示", "請選擇開始時間", false); return; }
-        if (!endDate) { showCustomAlert("提示", "請選擇結束日期", false); return; }
-        if (!endTime) { showCustomAlert("提示", "請選擇結束時間", false); return; }
-
-        const start = new Date(startDate + "T" + startTime + ":00");
-        const end = new Date(endDate + "T" + endTime + ":00");
-        if (end <= start) {
-          showCustomAlert("提示", "結束時間必須晚於開始時間", false);
-          return;
-        }
-      }
-
-      if (!reason) { showCustomAlert("提示", "請輸入請假原因", false); return; }
-
-      submitToAppsScript({
-        action: "leave",
-        name: userName,
-        userId: userId,
-        leaveMode: currentLeaveMode,
-        leaveType: leaveType,
-        startDate: startDate,
-        startTime: currentLeaveMode === "day" ? "全天" : startTime,
-        endDate: currentLeaveMode === "day" ? startDate : endDate,
-        endTime: currentLeaveMode === "day" ? "全天" : endTime,
-        reason: reason
-      });
-
-      showCustomAlert("申請已送出", "請假申請已送出，狀態：待審核", true, showStaffMenu);
-
-      document.getElementById("leave-start").value = "";
-      document.getElementById("leave-start-time").value = "";
-      document.getElementById("leave-end").value = "";
-      document.getElementById("leave-end-time").value = "";
-      document.getElementById("leave-reason").value = "";
-    }
-
-    // 加班申請邏輯
-    function showOvertimeForm() {
-      hideAllViews();
-      document.getElementById("overtime-form").style.display = "block";
-      document.getElementById("page-subtitle").innerText = "請填寫加班申請";
-    }
-
-    function submitOvertime() {
-      const overtimeDate = document.getElementById("overtime-date").value;
-      const startTime = document.getElementById("overtime-start-time").value;
-      const endTime = document.getElementById("overtime-end-time").value;
-      const reason = document.getElementById("overtime-reason").value.trim();
-
-      if (!overtimeDate) { showCustomAlert("提示", "請選擇加班日期", false); return; }
-      if (!startTime) { showCustomAlert("提示", "請選擇開始時間", false); return; }
-      if (!endTime) { showCustomAlert("提示", "請選擇結束時間", false); return; }
-      if (!reason) { showCustomAlert("提示", "請輸入加班原因", false); return; }
-
-      submitToAppsScript({
-        action: "overtime",
-        name: userName,
-        userId: userId,
-        overtimeDate: overtimeDate,
-        startTime: startTime,
-        endTime: endTime,
-        reason: reason
-      });
-
-      showCustomAlert("申請已送出", "加班申請已送出，狀態：待審核", true, showStaffMenu);
-
-      document.getElementById("overtime-date").value = "";
-      document.getElementById("overtime-start-time").value = "";
-      document.getElementById("overtime-end-time").value = "";
-      document.getElementById("overtime-reason").value = "";
-    }
-
-    // 🎯 彈窗與轉址邏輯 (防呆避免填錯時直接踢回主頁)
-    function showCustomAlert(title, msg, isSuccess, callback) {
-      document.getElementById("modal-title").innerText = title;
-      document.getElementById("modal-msg").innerText = msg;
-      document.getElementById("result-modal").style.display = "flex";
-      modalRedirectCallback = callback || null;
-    }
-
-    function closeModal() {
-      document.getElementById("result-modal").style.display = "none";
-      if (modalRedirectCallback) {
-        modalRedirectCallback();
-        modalRedirectCallback = null;
-      }
     }
 
     function checkSalary() {
@@ -1079,14 +894,13 @@
         const result = await response.json();
 
         if (result.success) {
-          document.getElementById("review-card").style.display = "flex";
+          document.getElementById("review-leave-button").style.display = "flex";
         }
       } catch (error) {
         console.log("審核權限檢查失敗", error);
       }
     }
 
-    // 🎯 主管審核 (包含請假與加班審核)
     async function showLeaveReview() {
       hideAllViews();
       document.getElementById("leave-review-view").style.display = "block";
@@ -1103,55 +917,34 @@
 
         if (!result.success) {
           document.getElementById("leave-review-list").innerText =
-            result.status || "無法讀取審核資料";
+            result.status || "無法讀取請假資料";
           return;
         }
 
-        if (result.leaves.length === 0 && (!result.overtimes || result.overtimes.length === 0)) {
-          document.getElementById("leave-review-list").innerText = "目前沒有待審核項目";
+        if (result.leaves.length === 0) {
+          document.getElementById("leave-review-list").innerText = "目前沒有待審核事項";
           return;
         }
 
         let html = "";
 
-        if (result.leaves && result.leaves.length > 0) {
-          html += `<h5 style="margin: 10px 0 5px 0; color: #0d6efd;">待審核請假：</h5>`;
-          result.leaves.forEach(function(item) {
-            const sDate = String(item.startDate).split("T")[0];
-            const sTime = String(item.startTime).includes("T") ? String(item.startTime).split("T")[1].substring(0, 5) : item.startTime;
-            const eDate = String(item.endDate).split("T")[0];
-            const eTime = String(item.endTime).includes("T") ? String(item.endTime).split("T")[1].substring(0, 5) : item.endTime;
+        result.leaves.forEach(function(item) {
+          const sDate = String(item.startDate).split("T")[0];
+          const sTime = String(item.startTime).includes("T") ? String(item.startTime).split("T")[1].substring(0, 5) : item.startTime;
+          const eDate = String(item.endDate).split("T")[0];
+          const eTime = String(item.endTime).includes("T") ? String(item.endTime).split("T")[1].substring(0, 5) : item.endTime;
 
-            html += `
-              <div style="text-align:left; border:1px solid #e0e0e0; border-radius:10px; padding:12px; margin:8px 0; background-color:#fff;">
-                <div style="font-size:15px; font-weight:bold; margin-bottom:4px;">${item.name} <span style="font-size:13px; color:#666;">(${item.leaveType})</span></div>
-                <div style="font-size:13px; color:#444; margin-bottom:2px;"><strong>時間：</strong>${sDate} ${sTime} ~ ${eDate} ${eTime}</div>
-                <div style="font-size:13px; color:#444; margin-bottom:2px;"><strong>時數：</strong>${item.hours} 小時</div>
-                <div style="font-size:13px; color:#444; margin-bottom:8px;"><strong>原因：</strong>${item.reason}</div>
-                <button class="btn-clock btn-on" style="margin:3px 0; padding:8px;" onclick="reviewItem('請假紀錄', ${item.rowNumber}, '已核准')">核准</button>
-                <button class="btn-clock btn-off" style="margin:3px 0; padding:8px;" onclick="reviewItem('請假紀錄', ${item.rowNumber}, '已駁回')">駁回</button>
-              </div>
-            `;
-          });
-        }
-
-        if (result.overtimes && result.overtimes.length > 0) {
-          html += `<h5 style="margin: 15px 0 5px 0; color: #20c997;">待審核加班：</h5>`;
-          result.overtimes.forEach(function(item) {
-            const oDate = String(item.overtimeDate).split("T")[0];
-
-            html += `
-              <div style="text-align:left; border:1px solid #e0e0e0; border-radius:10px; padding:12px; margin:8px 0; background-color:#fff;">
-                <div style="font-size:15px; font-weight:bold; margin-bottom:4px;">${item.name} <span style="font-size:13px; color:#666;">(加班)</span></div>
-                <div style="font-size:13px; color:#444; margin-bottom:2px;"><strong>日期：</strong>${oDate}</div>
-                <div style="font-size:13px; color:#444; margin-bottom:2px;"><strong>時間：</strong>${item.startTime} ~ ${item.endTime}</div>
-                <div style="font-size:13px; color:#444; margin-bottom:8px;"><strong>原因：</strong>${item.reason}</div>
-                <button class="btn-clock btn-on" style="margin:3px 0; padding:8px;" onclick="reviewItem('加班紀錄', ${item.rowNumber}, '已核准')">核准</button>
-                <button class="btn-clock btn-off" style="margin:3px 0; padding:8px;" onclick="reviewItem('加班紀錄', ${item.rowNumber}, '已駁回')">駁回</button>
-              </div>
-            `;
-          });
-        }
+          html += `
+            <div style="text-align:left; border:1px solid #e0e0e0; border-radius:10px; padding:15px; margin:12px 0; background-color:#fff;">
+              <div style="font-size:16px; font-weight:bold; margin-bottom:6px;">${item.name} <span style="font-size:14px; font-weight:normal; color:#666;">(${item.leaveType})</span></div>
+              <div style="font-size:14px; color:#444; margin-bottom:4px;"><strong>時間：</strong>${sDate} ${sTime} ~ ${eDate} ${eTime}</div>
+              <div style="font-size:14px; color:#444; margin-bottom:4px;"><strong>時數：</strong>${item.hours} 小時</div>
+              <div style="font-size:14px; color:#444; margin-bottom:12px;"><strong>原因：</strong>${item.reason}</div>
+              <button class="btn-clock btn-on" style="margin:5px 0;" onclick="reviewLeave(${item.rowNumber}, '已核准')">核准</button>
+              <button class="btn-clock btn-off" style="margin:5px 0;" onclick="reviewLeave(${item.rowNumber}, '已駁回')">駁回</button>
+            </div>
+          `;
+        });
 
         document.getElementById("leave-review-list").innerHTML = html;
 
@@ -1161,20 +954,19 @@
       }
     }
 
-    function reviewItem(sheetName, rowNumber, decision) {
-      if (!confirm("確定要" + decision + "這筆紀錄嗎？")) {
+    function reviewLeave(rowNumber, decision) {
+      if (!confirm("確定要" + decision + "這筆申請嗎？")) {
         return;
       }
 
       submitToAppsScript({
-        action: "reviewItem",
+        action: "reviewLeave",
         reviewerUserId: userId,
-        sheetName: sheetName,
         rowNumber: rowNumber,
         decision: decision
       });
 
-      showCustomAlert("審核完成", "已送出：" + decision, true);
+      showCustomAlert("審核完成", "已送出：" + decision, true, false);
 
       setTimeout(function() {
         showLeaveReview();
