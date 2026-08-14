@@ -120,6 +120,36 @@
       padding: 12px; margin-bottom: 15px; text-align: left; font-size: 14px; color: #2e7d32; line-height: 1.6;
     }
 
+    /* 手風琴摺疊樣式 */
+    .rule-item {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .rule-header {
+      background-color: #f1f3f5;
+      padding: 12px 15px;
+      font-weight: bold;
+      color: #495057;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rule-content {
+      padding: 12px 15px;
+      font-size: 14px;
+      color: #333;
+      line-height: 1.6;
+      background-color: #fff;
+      border-top: 1px solid #dee2e6;
+      white-space: pre-line;
+    }
+
     #loading { text-align: center; margin-top: 40px; color: #6c757d; }
   </style>
 </head>
@@ -362,19 +392,179 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
 
-      <!-- 工作守則視圖 -->
+      <!-- 🎯 工作守則視圖 (完整10大單元手風琴) -->
       <div id="rules-view" class="sub-card" style="display: none;">
-        <h4>知味店務工作守則</h4>
-        <p style="font-size: 14px; color: #555; line-height: 1.6;">
-          1. 上下班請確實打卡，遲到早退請事先說明。<br>
-          2. 請假與加班申請請提前於系統送出待主管審核。<br>
-          3. 買菜金與每日銷售紀錄請當天正確登打。<br>
-          4. 設備清潔請依規定定期保養與登記。
-        </p>
+        <h4 style="margin-top:0; margin-bottom:15px;">知味店務工作手則 (SOP)</h4>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-1')">
+            <span>一、值班店長管理職責</span><span>▼</span>
+          </div>
+          <div id="rule-1" class="rule-content" style="display: none;">
+1. 工作分配與調度：負責每日外送指派、倒垃圾、整理菜品及當日各區清潔分配。
+2. 貼班與排班協調：同仁當月如需請假或調班，須主動告知店長，由店長安排替補人員並於工作群組回報。
+3. 環境與大清檢查：每日確認全店環境整潔，並排定定期大清項目（冰箱每月一次、冷氣每兩個月清潔一次、抽油煙機定期排程）。
+4. 服務態度督導：隨時留意同仁對顧客的應對禮貌，維持門市良好形象。
+5. 回報制度落實：每日負責整理菜品回報，並於打烊時確認晚班所有工作是否確實完成。
+6. 新進同仁培訓：主導新進員工教育訓練，可視情況指派資深同仁協助帶領。
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-2')">
+            <span>二、出勤、人事與職場紀律規範</span><span>▼</span>
+          </div>
+          <div id="rule-2" class="rule-content" style="display: none;">
+1. 打卡規定：上下班請務必使用本系統進行 GPS 即時定位打卡，嚴禁代打卡。請抵達店內後再行打卡，切勿於通勤途中遠端打卡。
+2. 遲到與早退：如遇不可抗力或交通狀況預計遲到，請提前至少 15~30 分鐘於工作群組主動告知店長。
+3. 請假與加班申請：
+   • 事前請假：一般請假需提前於系統送出，待店長/主管核准後生效。
+   • 突發病假：需於上班前致電或訊息報備，事後補送系統請假單。
+   • 加班申請：若因店務需求延長工時，需於事後填單送審。
+4. 調班原則：同仁間私下調班需經雙方同意，並向店長報備核准後始生效。
+5. 服務禮貌與素養：對待顧客請保持禮貌與親切態度。店內嚴禁罵髒話、粗俗言語或情緒化爭執。
+6. 手機時間管理：工作時間（特別是前台面對客人、備料切肉炸物時）嚴禁低頭滑手機、追劇或配戴耳機聽音樂。若有緊急電話請至後方短暫接聽。
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-3')">
+            <span>三、門市衛生習慣、收銀防呆與客訴處置</span><span>▼</span>
+          </div>
+          <div id="rule-3" class="rule-content" style="display: none;">
+1. 食品衛生與個人習慣：
+   • 試味道規範：試吃/試味道時務必使用專用小碗匙，嚴禁用料理公勺直接就口。
+   • 熟食防護（必用夾子）：拾取熟食、小菜與炸物時，必須一律使用食物夾，嚴禁徒手（包含戴手套徒手）直接觸碰熟食，杜絕交叉污染。
+   • 咳嗽與打噴嚏：如有咳嗽打噴嚏需求，務必轉身背對食材、以手肘或紙巾遮蔽，事後立即洗手。
+2. 客人找零收銀防呆：
+   • 收錢與找零時落實「口頭唱票」（例：「收您 1,000 元，找您 850 元」）。
+   • 找零點清並交給顧客後，再將大鈔放入錢箱，避免爭執。
+3. 客訴即時處置：
+   • 遇餐點異物或客人抱怨，第一時間「先致歉並立刻重做/換一份或退款」，絕不可當場與客人起爭執，並第一時間回報店長。
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-4')">
+            <span>四、職場安全與危險設備操作 ⚠️</span><span>▼</span>
+          </div>
+          <div id="rule-4" class="rule-content" style="display: none;">
+1. 營業用切肉機操作規範（防割傷責任防線）：
+   • 專注操作：操作切肉機時嚴禁嬉鬧、滑手機或分心交談。
+   • 必用壓肉板：推肉時嚴禁徒手直接推壓食材，肉塊變小時必須使用壓肉板/推料把手推進。
+   • 斷電維護：清潔刀片、擦拭機身或排除卡料前，務必先關閉電源開關並拔掉插頭。
+   • 防護手套：擦拭或拆裝刀盤時，強烈建議配戴防割手套（或棉手套）。
+2. 落地型油炸機操作與漏油安全（防燙傷/防起火）：
+   • 降溫才漏油：更換炸油或清理油炸機時，嚴禁在高溫滾燙時開閥漏油，需待油溫冷卻至安全溫度後方可操作。
+   • 嚴禁水分進入：油槽加溫時嚴禁水滴、冰塊或未瀝乾食材直接投入，避免高溫熱油噴濺燙傷。
+   • 保持乾燥防滑：油炸機周圍地面若有油漬需隨時拖乾，避免人員滑倒燙傷。
+3. 外送交通安全與公司車保養：
+   • 遵守交通規則：外送途中嚴禁超速、闖紅燈、逆向或邊騎邊看手機；安全第一，若因個人違規受罰由駕駛人自行承擔。
+   • 車輛保養（兩台公用車）：騎乘公司車外送時，儀表板機油警示燈亮起時，請立即牽至配合車行更換機油並回報。平時需主動留意胎壓與煞車狀況。
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-5')">
+            <span>五、水電瓦斯、節能與設備保養 💡</span><span>▼</span>
+          </div>
+          <div id="rule-5" class="rule-content" style="display: none;">
+1. 冷氣使用與清潔規定：
+   • 溫控標準：店內冷氣固定設定為 28 度，禁止隨意調至極低溫造成設備過載與電費浪費。
+   • 濾網清潔：每兩個月清潔一次冷氣濾網，清洗完畢後至系統「設備清潔紀錄」登記。
+2. 冰箱保養週期：
+   • 每個月固定深度清潔一次冰箱內部與濾網，完成後至系統登記。
+3. 閉店安全檢查（瓦斯/水電/門窗）：
+   • 打烊離店前最後人員務必確實檢查：關閉瓦斯總閥、關閉冷氣電燈與非必要電器電源、前後門窗確實上鎖。
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-6')">
+            <span>六、班別職責與開閉店流程</span><span>▼</span>
+          </div>
+          <div id="rule-6" class="rule-content" style="display: none;">
+1. 早班（開班準備）：
+   • 準備羹湯、肉燥、滷汁、炸物、配菜、酸菜。
+   • 捲麵、備米粉、裝飯、裝飲料。
+   • 補齊耗材：筷子、湯匙、餐盒、碗、碗蓋、橡皮筋至齊全。
+2. 晚班（下午 15:30 銜接）：
+   • 加熱：筍子、吳郭魚、肉燥、滷汁、湯品。
+   • 補齊前台耗材，並檢查桌底備用免洗餐具與「三寶」備料並補足。
+3. 閉店打烊分工、每週輪替與共同收攤原則：
+   • 晚班前方：收拾並擦拭前方工作區、清理油炸機、地板清潔。
+   • 晚班後方：後方工作區清潔、清洗鍋碗瓢盆、中間區及廁所清潔、將前日垃圾移至室外。
+   • 剩食處理：所有食材當日售完即止、不留至隔夜，可由同仁分裝帶回。
+   • 每週輪替機制：晚班「前區」與「後區」每週對調一次，讓分工更公平、工作負擔更平均。若當週有人請假，由代班者依原輪值位置協助。
+   • 「共同收攤」原則：晚班屬於共同收攤，店內所有清潔完成後雙方一同下班。若某區進度落後，另一邊需主動協助，避免同事單獨卡住太久。
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-7')">
+            <span>七、核心料理與備料標準 (SOP)</span><span>▼</span>
+          </div>
+          <div id="rule-7" class="rule-content" style="display: none;">
+1. 羹湯調配比例：
+   • 先撈水備用；水滾後下大白菜、扁魚、沙茶、糖包，攪拌至融化。
+   • 將醋、太白粉與預留備用水混勻；水大滾後緩慢倒入混合液並持續攪拌至大滾。
+   • 份量比例：
+     - 1/8 鍋：大白菜 1 把、扁魚 1 匙、沙茶 1/2 匙
+     - 0.25 鍋：大白菜 2 把、扁魚 2 匙、沙茶 1 匙
+     - 0.5 鍋：大白菜 4 把、扁魚 4 匙、沙茶 2 匙
+2. 肉燥加熱防沾鍋：
+   • 火力轉至最小，每隔 15 分鐘→10 分鐘→5 分鐘定時攪拌一次至微滾，全程約需 35~40 分鐘。
+3. 滷湯與油豆腐：
+   • 若需添加新油豆腐，務必先將舊油豆腐撈起。
+   • 轉大火至滾後轉小火，計時 50 分鐘滷至入味；若無添加新品，大火滾透即可關火。
+4. 炸物定溫與時間規範：
+   • 雞腿：炸 10 分鐘，單鍋上限 10 隻（避免沾黏）。
+     沾粉標準：以一包為單位，先以舊粉沾第一次，整包沾完後補大量新粉沾第二次以保酥脆美觀。
+   • 雞排：總時長 6 分鐘（可先預炸 4 分鐘備用，出餐前再回炸 2 分鐘）。
+   • 排骨：炸 1 分鐘（沾粉/不沾粉皆約 1 分鐘）。
+   • 土魠魚：先炸 1 分鐘→起鍋靜置 1 分鐘→回炸 1 分鐘；單鍋上限 20 塊。
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-8')">
+            <span>八、食材保存與先進先出 (FIFO)</span><span>▼</span>
+          </div>
+          <div id="rule-8" class="rule-content" style="display: none;">
+1. 冷藏擺放原則：所有麵條、食材入庫遵循「由前至後、由左至右」；左邊為舊料、右邊為新進料。
+2. 取用順序：備料與烹煮時，一律嚴格執行「先使用舊料、後使用新進料」，杜絕過期與耗損。
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-9')">
+            <span>九、外送接單、服務標準與員工福利</span><span>▼</span>
+          </div>
+          <div id="rule-9" class="rule-content" style="display: none;">
+1. 外送電話接單確認：
+   • 資訊記錄：清楚記錄詳細送達地址、希望送達時間、聯絡人稱呼與電話。
+   • 品項核對：務必確認餐點細節（例：土魠魚羹麵、排骨羹麵、純羹不加麵等）。
+   • 主動詢問：是否需要免洗餐具、湯品或加點飲料。
+2. 外送責任指派：由店長負責統籌調配，確保餐點準時送達。
+3. 員工伙食福利：店內餐點品項皆可自由取用吃飽。若同仁想自行烹飪，可合理取用店內食材發揮廚藝。
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-header" onclick="toggleRule('rule-10')">
+            <span>十、財務、記帳與設備維護</span><span>▼</span>
+          </div>
+          <div id="rule-10" class="rule-content" style="display: none;">
+1. 買菜金與流水帳：拿取買菜金採買或支付廠商款項，當下必須至員工系統完成「買菜金記帳」。
+2. 每日銷售回報：打烊結算時，確實於系統登打當日「賣出羹數、賣出飯數及當日帳支出」。
+3. 設備定期保養：冰箱與冷氣設備需依週期完成清理，並在系統「設備清潔紀錄」完成登記。
+          </div>
+        </div>
+
         <button class="btn-clock btn-gray" style="margin-top: 15px;" onclick="showHomeMenu()">返回首頁</button>
       </div>
       
-      <!-- 自訂結果提示卡片 -->
+      <!-- 結果提示卡片 -->
       <div id="result-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 999;">
         <div style="background: white; padding: 20px; border-radius: 12px; width: 80%; max-width: 300px; text-align: center;">
           <h4 id="modal-title" style="margin-top: 0; color: #333;">登記成功</h4>
@@ -795,6 +985,11 @@
       document.getElementById("page-subtitle").innerText = "知味店務工作守則";
     }
 
+    function toggleRule(id) {
+      const el = document.getElementById(id);
+      el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none";
+    }
+
     function checkSalary() {
       hideAllViews();
       document.getElementById("salary-view").style.display = "block";
@@ -860,9 +1055,8 @@
         const response = await fetch(url);
         const textData = await response.text();
 
-        // 防呆判斷：避免 GAS 回傳 HTML 錯誤頁面造成 Unexpected token '<' 崩潰
         if (textData.startsWith("<")) {
-          document.getElementById("annual-leave-result").innerText = "系統連線忙碌中，請重新點擊查詢！";
+          document.getElementById("annual-leave-result").innerText = "系統連線忙碌中，請稍候重試！";
           return;
         }
 
@@ -879,8 +1073,7 @@
             result.status || "查詢失敗";
         }
       } catch (error) {
-        document.getElementById("annual-leave-result").innerText =
-          "查詢失敗，請重新再試一次。";
+        document.getElementById("annual-leave-result").innerText = "查詢失敗，請重試。";
       }
     }
 
@@ -893,7 +1086,6 @@
         const response = await fetch(url);
         const result = await response.json();
 
-        // 後端確認有審核權限後，顯示「主管審核」按鈕卡片
         if (result.success) {
           const btn = document.getElementById("review-leave-button");
           if (btn) {
@@ -961,7 +1153,6 @@
       }
     }
 
-    // 🎯 送出審核（包含指定工作表名稱）
     function reviewItem(sheetName, rowNumber, decision) {
       if (!confirm("確定要" + decision + "這筆申請嗎？")) {
         return;
