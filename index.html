@@ -921,31 +921,34 @@
 
         if (!result.success) {
           document.getElementById("leave-review-list").innerText =
-            result.status || "無法讀取請假資料";
+            result.status || "無法讀取審核資料";
           return;
         }
 
-        if (result.leaves.length === 0) {
+        const items = result.items || [];
+
+        if (items.length === 0) {
           document.getElementById("leave-review-list").innerText = "目前沒有待審核事項";
           return;
         }
 
         let html = "";
 
-        result.leaves.forEach(function(item) {
-          const sDate = String(item.startDate).split("T")[0];
-          const sTime = String(item.startTime).includes("T") ? String(item.startTime).split("T")[1].substring(0, 5) : item.startTime;
-          const eDate = String(item.endDate).split("T")[0];
-          const eTime = String(item.endTime).includes("T") ? String(item.endTime).split("T")[1].substring(0, 5) : item.endTime;
+        items.forEach(function(item) {
+          const isOvertime = (item.type === "加班");
+          const tagColor = isOvertime ? "#20c997" : "#0d6efd";
 
           html += `
             <div style="text-align:left; border:1px solid #e0e0e0; border-radius:10px; padding:15px; margin:12px 0; background-color:#fff;">
-              <div style="font-size:16px; font-weight:bold; margin-bottom:6px;">${item.name} <span style="font-size:14px; font-weight:normal; color:#666;">(${item.leaveType})</span></div>
-              <div style="font-size:14px; color:#444; margin-bottom:4px;"><strong>時間：</strong>${sDate} ${sTime} ~ ${eDate} ${eTime}</div>
-              <div style="font-size:14px; color:#444; margin-bottom:4px;"><strong>時數：</strong>${item.hours} 小時</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:16px; font-weight:bold;">${item.name}</span>
+                <span style="background:${tagColor}; color:#fff; font-size:12px; padding:3px 8px; border-radius:12px;">${item.type} - ${item.subType}</span>
+              </div>
+              <div style="font-size:14px; color:#444; margin-bottom:4px;"><strong>時間：</strong>${item.startDate} ${item.startTime} ~ ${item.endDate} ${item.endTime}</div>
+              ${!isOvertime ? `<div style="font-size:14px; color:#444; margin-bottom:4px;"><strong>請假時數：</strong>${item.hours} 小時</div>` : ''}
               <div style="font-size:14px; color:#444; margin-bottom:12px;"><strong>原因：</strong>${item.reason}</div>
-              <button class="btn-clock btn-on" style="margin:5px 0;" onclick="reviewLeave(${item.rowNumber}, '已核准')">核准</button>
-              <button class="btn-clock btn-off" style="margin:5px 0;" onclick="reviewLeave(${item.rowNumber}, '已駁回')">駁回</button>
+              <button class="btn-clock btn-on" style="margin:5px 0;" onclick="reviewItem('${item.sheetName}', ${item.rowNumber}, '已核准')">核准</button>
+              <button class="btn-clock btn-off" style="margin:5px 0;" onclick="reviewItem('${item.sheetName}', ${item.rowNumber}, '已駁回')">駁回</button>
             </div>
           `;
         });
@@ -958,7 +961,8 @@
       }
     }
 
-    function reviewLeave(rowNumber, decision) {
+    // 🎯 送出審核（包含指定工作表名稱）
+    function reviewItem(sheetName, rowNumber, decision) {
       if (!confirm("確定要" + decision + "這筆申請嗎？")) {
         return;
       }
@@ -966,6 +970,7 @@
       submitToAppsScript({
         action: "reviewLeave",
         reviewerUserId: userId,
+        sheetName: sheetName,
         rowNumber: rowNumber,
         decision: decision
       });
