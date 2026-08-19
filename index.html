@@ -279,7 +279,7 @@
         </div>
         <div class="form-group">
           <label for="overtime-reason">加班原因</label>
-          <textarea id="overtime-reason" placeholder="例如：忙碌備料、盤點作業"></textarea>
+          <textarea id="overtime-reason" placeholder="例如：協助備料、請假代班"></textarea>
         </div>
         <button class="btn-clock btn-teal" onclick="submitOvertime()">送出加班申請</button>
         <button class="btn-clock btn-gray" onclick="showStaffMenu()">返回員工專區</button>
@@ -313,21 +313,21 @@
         <div class="form-group" id="pc-category-group">
           <label for="pc-category">選擇分類</label>
           <select id="pc-category" onchange="checkCustomCategory()">
+            <option value="菜">菜</option>
+            <option value="麵">麵</option>
+            <option value="南北貨">南北貨</option>
+            <option value="卜健">卜健</option>
             <option value="春億(醬料)">春億(醬料)</option>
             <option value="ESD/餐盒">ESD/餐盒</option>
             <option value="米">米</option>
             <option value="合盛">合盛</option>
             <option value="排骨/肉燥">排骨/肉燥</option>
             <option value="雞蛋/滷蛋">雞蛋/滷蛋</option>
-            <option value="麵">麵</option>
-            <option value="菜">菜</option>
-            <option value="吳郭魚">吳郭魚</option>
             <option value="虱目魚">虱目魚</option>
-            <option value="南北貨">南北貨</option>
+            <option value="吳郭魚">吳郭魚</option>
             <option value="交通">交通</option>
             <option value="瓦斯">瓦斯</option>
             <option value="冰">冰</option>
-            <option value="卜健">卜健</option>
             <option value="店主入金">💵 店主入金 (+錢)</option>
             <option value="其他">其他 (自行輸入)</option>
           </select>
@@ -352,21 +352,22 @@
       <div id="sales-form" class="sub-card" style="display: none;">
         <div id="today-sales-summary" class="summary-card">讀取今日已登記紀錄...</div>
         <div class="form-group">
-          <label for="sales-soup">賣出羹數 (碗)</label>
+          <label for="sales-soup">賣出羹數</label>
           <input id="sales-soup" type="number" step="0.01" placeholder="請輸入賣出羹數">
         </div>
         <div class="form-group">
-          <label for="sales-rice">賣出飯數 (碗)</label>
+          <label for="sales-rice">賣出飯數</label>
           <input id="sales-rice" type="number" step="0.01" placeholder="請輸入賣出飯數">
+        </div>
+        <div class="form-group">
+          <label for="sales-note">當日支出項目</label>
+          <input id="sales-note" type="text" placeholder="例：吳郭魚、油錢">
         </div>
         <div class="form-group">
           <label for="sales-expense">當日帳支出金額 (元)</label>
           <input id="sales-expense" type="number" placeholder="無支出可不填">
         </div>
-        <div class="form-group">
-          <label for="sales-note">備註 (支出項目)</label>
-          <input id="sales-note" type="text" placeholder="例：虱目魚、油錢">
-        </div>
+        
         <button class="btn-clock btn-blue" onclick="submitSales()">確認送出</button>
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
@@ -826,7 +827,7 @@
       document.getElementById("petty-cash-form").style.display = "block";
       document.getElementById("page-subtitle").innerText = "買菜金記帳";
 
-      document.getElementById("pc-category").value = "春億(醬料)";
+      document.getElementById("pc-category").value = "菜";
       document.getElementById("pc-custom-category").value = "";
       document.getElementById("pc-amount").value = "";
       document.getElementById("pc-note").value = "";
