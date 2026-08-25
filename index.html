@@ -607,6 +607,12 @@
     }
 
     function handleClock(type) {
+      // 🌟 【防重複打卡】鎖定上下班按鈕 🌟
+      const btnOn = document.querySelector(".btn-on");
+      const btnOff = document.querySelector(".btn-off");
+      if (btnOn) btnOn.disabled = true;
+      if (btnOff) btnOff.disabled = true;
+
       document.getElementById("main-content").style.display = "none";
       document.getElementById("loading").style.display = "block";
       setLoading("正在取得 GPS 定位...");
@@ -634,6 +640,8 @@
         },
         function(error) {
           showCustomAlert("打卡失敗", "無法取得定位：" + error.message, false);
+          if (btnOn) btnOn.disabled = false;
+          if (btnOff) btnOff.disabled = false;
           resetUI();
         },
         { enableHighAccuracy: true, timeout: 10000 }
@@ -853,6 +861,14 @@
         return;
       }
 
+      // 🌟 【防重複送出】鎖定送出按鈕 🌟
+      const submitBtn = document.querySelector("#petty-cash-form .btn-blue");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = "⏳ 傳送中，請勿重複點擊...";
+        submitBtn.style.opacity = "0.6";
+      }
+
       submitToAppsScript({
         action: "pettyCash",
         name: userName,
@@ -875,10 +891,16 @@
           showCustomAlert("記帳成功", `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元${balanceMsg}`, true, false);
         } catch(e) {
           showCustomAlert("記帳已送出", `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元`, true, false);
+        } finally {
+          // 恢復按鈕
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "確認送出";
+            submitBtn.style.opacity = "1";
+          }
         }
       }, 800);
     }
-
     async function showSalesForm() {
       hideAllViews();
       document.getElementById("sales-form").style.display = "block";
