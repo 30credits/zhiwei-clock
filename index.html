@@ -348,16 +348,24 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
 
-      <!-- 每日銷售紀錄視圖 -->
+     <!-- 每日銷售紀錄視圖 -->
       <div id="sales-form" class="sub-card" style="display: none;">
         <div id="today-sales-summary" class="summary-card">讀取今日已登記紀錄...</div>
         <div class="form-group">
-          <label for="sales-soup">登記羹數</label>
-          <input id="sales-soup" type="number" step="0.01" placeholder="請輸入登記羹數">
+          <label for="sales-soup">登記羹數 (鍋)</label>
+          <input id="sales-soup" type="number" step="0.01" placeholder="例：0.25、0.5">
         </div>
         <div class="form-group">
-          <label for="sales-rice">登記飯數</label>
-          <input id="sales-rice" type="number" step="0.01" placeholder="請輸入登記飯數">
+          <label for="sales-rice">登記飯數 (碗/鍋)</label>
+          <input id="sales-rice" type="number" step="0.01" placeholder="例：10、20">
+        </div>
+        <div class="form-group">
+          <label for="sales-remain-soup">剩餘羹數 (鍋/碗)</label>
+          <input id="sales-remain-soup" type="number" step="0.01" placeholder="打烊剩餘（可不填）">
+        </div>
+        <div class="form-group">
+          <label for="sales-remain-rice">剩餘飯數 (碗/鍋)</label>
+          <input id="sales-remain-rice" type="number" step="0.01" placeholder="打烊剩餘（可不填）">
         </div>
         <div class="form-group">
           <label for="sales-note">當日支出項目</label>
@@ -908,6 +916,8 @@
 
       document.getElementById("sales-soup").value = "";
       document.getElementById("sales-rice").value = "";
+      document.getElementById("sales-remain-soup").value = "";
+      document.getElementById("sales-remain-rice").value = "";
       document.getElementById("sales-expense").value = "";
       document.getElementById("sales-note").value = "";
 
@@ -949,12 +959,22 @@
     function submitSales() {
       const soupCount = document.getElementById("sales-soup").value;
       const riceCount = document.getElementById("sales-rice").value;
+      const remainSoup = document.getElementById("sales-remain-soup").value;
+      const remainRice = document.getElementById("sales-remain-rice").value;
       const expense = document.getElementById("sales-expense").value;
       const note = document.getElementById("sales-note").value.trim();
 
-      if (!soupCount && !riceCount && !expense) {
-        showCustomAlert("提示", "請至少填寫羹數、飯數或支出金額！", false, true);
+      if (!soupCount && !riceCount && !remainSoup && !remainRice && !expense) {
+        showCustomAlert("提示", "請至少填寫一項登記資料！", false, true);
         return;
+      }
+
+      // 防連點鎖定
+      const submitBtn = document.querySelector("#sales-form .btn-blue");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = "⏳ 傳送中，請勿重複點擊...";
+        submitBtn.style.opacity = "0.6";
       }
 
       submitToAppsScript({
@@ -964,11 +984,28 @@
         soupCount: soupCount || 0,
         riceCount: riceCount || 0,
         expense: expense || 0,
-        note: note
+        note: note,
+        remainSoup: remainSoup || 0,
+        remainRice: remainRice || 0
       });
 
-      const msg = `每日銷售紀錄已送出！\n羹：${soupCount || 0} \n飯：${riceCount || 0} \n支出：$${expense || 0} 元 ${note ? '(' + note + ')' : ''}`;
+      let summaryList = [];
+      if (soupCount) summaryList.push("登記羹：" + soupCount);
+      if (riceCount) summaryList.push("登記飯：" + riceCount);
+      if (remainSoup) summaryList.push("剩餘羹：" + remainSoup);
+      if (remainRice) summaryList.push("剩餘飯：" + remainRice);
+      if (expense) summaryList.push("支出：$" + expense + " 元 " + (note ? '(' + note + ')' : ''));
+
+      const msg = "每日銷售紀錄已送出！\n" + summaryList.join("\n");
       showCustomAlert("登記成功", msg, true, false);
+
+      setTimeout(() => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "確認送出";
+          submitBtn.style.opacity = "1";
+        }
+      }, 1000);
     }
 
     function showCleanForm() {
