@@ -120,7 +120,6 @@
       padding: 12px; margin-bottom: 15px; text-align: left; font-size: 14px; color: #2e7d32; line-height: 1.6;
     }
 
-    /* 手風琴摺疊樣式 */
     .rule-item {
       border: 1px solid #dee2e6;
       border-radius: 8px;
@@ -198,6 +197,12 @@
           <div class="menu-card card-sales" onclick="showOvertimeForm()">
             <div class="icon">⏳</div><div class="title">加班申請</div>
           </div>
+          <div class="menu-card card-clock" onclick="showMissedClockForm()">
+            <div class="icon">🩹</div><div class="title">補卡申請</div>
+          </div>
+          <div class="menu-card card-clean" onclick="showTodayAttendance()">
+            <div class="icon">📋</div><div class="title">今日出勤</div>
+          </div>
           <div class="menu-card card-sub" onclick="checkSalary()">
             <div class="icon">💰</div><div class="title">薪資查詢</div>
           </div>
@@ -216,6 +221,39 @@
         <button class="btn-clock btn-on" onclick="handleClock('上班')">上班打卡</button>
         <button class="btn-clock btn-off" onclick="handleClock('下班')">下班打卡</button>
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
+      </div>
+
+      <!-- 補卡申請表單 -->
+      <div id="missed-clock-form" class="sub-card" style="display: none;">
+        <h4 style="margin-top:0;">補卡申請</h4>
+        <div class="form-group">
+          <label for="mc-date">補卡日期</label>
+          <input id="mc-date" type="date">
+        </div>
+        <div class="form-group">
+          <label for="mc-type">補卡類型</label>
+          <select id="mc-type">
+            <option value="上班">上班補卡</option>
+            <option value="下班">下班補卡</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="mc-time">打卡時間</label>
+          <input id="mc-time" type="time">
+        </div>
+        <div class="form-group">
+          <label for="mc-reason">補卡原因</label>
+          <textarea id="mc-reason" placeholder="例：手機沒電、忘記打卡"></textarea>
+        </div>
+        <button class="btn-clock btn-blue" onclick="submitMissedClock()">送出補卡申請</button>
+        <button class="btn-clock btn-gray" onclick="showStaffMenu()">返回員工專區</button>
+      </div>
+
+      <!-- 今日出勤看板視圖 -->
+      <div id="attendance-view" class="sub-card" style="display: none;">
+        <h4 style="margin-top:0;">今日門市出勤動態</h4>
+        <div id="attendance-list">讀取中...</div>
+        <button class="btn-clock btn-gray" style="margin-top: 15px;" onclick="showStaffMenu()">返回員工專區</button>
       </div>
 
       <!-- 請假表單 -->
@@ -348,16 +386,24 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
 
-     <!-- 每日銷售紀錄視圖 -->
+      <!-- 每日銷售紀錄視圖 -->
       <div id="sales-form" class="sub-card" style="display: none;">
         <div id="today-sales-summary" class="summary-card">讀取今日已登記紀錄...</div>
         <div class="form-group">
-          <label for="sales-soup">登記羹數</label>
+          <label for="sales-soup">登記羹數 (鍋)</label>
           <input id="sales-soup" type="number" step="0.01" placeholder="例：0.25、0.5">
         </div>
         <div class="form-group">
-          <label for="sales-rice">登記飯數</label>
+          <label for="sales-rice">登記飯數 (碗/鍋)</label>
           <input id="sales-rice" type="number" step="0.01" placeholder="例：10、20">
+        </div>
+        <div class="form-group">
+          <label for="sales-remain-soup">剩餘羹數 (鍋/碗)</label>
+          <input id="sales-remain-soup" type="number" step="0.01" placeholder="打烊剩餘（可不填）">
+        </div>
+        <div class="form-group">
+          <label for="sales-remain-rice">剩餘飯數 (公斤)</label>
+          <input id="sales-remain-rice" type="number" step="0.01" placeholder="以公斤計算（可不填）">
         </div>
         <div class="form-group">
           <label for="sales-note">當日支出項目</label>
@@ -366,14 +412,6 @@
         <div class="form-group">
           <label for="sales-expense">當日帳支出金額 (元)</label>
           <input id="sales-expense" type="number" placeholder="無支出可不填">
-        </div>
-        <div class="form-group">
-          <label for="sales-remain-soup">剩餘羹數</label>
-          <input id="sales-remain-soup" type="number" step="0.01" placeholder="打烊剩餘（可不填）">
-        </div>
-        <div class="form-group">
-          <label for="sales-remain-rice">剩餘飯數</label>
-          <input id="sales-remain-rice" type="number" step="0.01" placeholder="以公斤計算（可不填）">
         </div>
         
         <button class="btn-clock btn-blue" onclick="submitSales()">確認送出</button>
@@ -401,7 +439,7 @@
         <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
       </div>
 
-      <!-- 🎯 工作守則視圖 (完整10大單元手風琴) -->
+      <!-- 工作守則視圖 -->
       <div id="rules-view" class="sub-card" style="display: none;">
         <h4 style="margin-top:0; margin-bottom:15px;">知味店務工作手則 (SOP)</h4>
 
@@ -429,6 +467,7 @@
 3. 請假與加班申請：
    • 事前請假：一般請假需提前於系統送出，待店長/主管核准後生效。
    • 突發病假：需於上班前致電或訊息報備，事後補送系統請假單。
+   • 補卡申請：若忘記打卡或系統異常，請至「補卡申請」填寫送審。
    • 加班申請：若因店務需求延長工時，需於事後填單送審。
 4. 調班原則：同仁間私下調班需經雙方同意，並向店長報備核准後始生效。
 5. 颱風假計薪原則：遇政府宣布停班停課且經老闆確認門市暫停營業時，當日免出勤。為維持月薪完整，優先以「特休時數」折抵（享全薪）；若無特休或特休用罄者，當日以事假（不支薪）計算。
@@ -452,7 +491,7 @@
    • 找零點清並交給顧客後，再將大鈔放入錢箱，避免爭執。
 3. 客訴即時處置：
    • 遇餐點異物或客人抱怨，第一時間「先致歉並立刻重做/換一份或退款」，絕不可當場與客人起爭執，並第一時間回報店長。
-4.外送電話接單確認：
+4. 外送電話接單確認：
    • 資訊記錄：清楚記錄詳細送達地址、希望送達時間、聯絡人稱呼與電話。
    • 品項核對：務必確認餐點細節。
    • 主動詢問：是否需要免洗餐具、湯品。            
@@ -615,7 +654,6 @@
     }
 
     function handleClock(type) {
-      // 🌟 【防重複打卡】鎖定上下班按鈕 🌟
       const btnOn = document.querySelector(".btn-on");
       const btnOff = document.querySelector(".btn-off");
       if (btnOn) btnOn.disabled = true;
@@ -697,6 +735,8 @@
       document.getElementById("home-menu").style.display = "none";
       document.getElementById("staff-menu").style.display = "none";
       document.getElementById("clock-menu").style.display = "none";
+      document.getElementById("missed-clock-form").style.display = "none";
+      document.getElementById("attendance-view").style.display = "none";
       document.getElementById("leave-form").style.display = "none";
       document.getElementById("overtime-form").style.display = "none";
       document.getElementById("annual-leave-view").style.display = "none";
@@ -724,6 +764,84 @@
       hideAllViews();
       document.getElementById("clock-menu").style.display = "block";
       document.getElementById("page-subtitle").innerText = "請選擇打卡類型";
+    }
+
+    function showMissedClockForm() {
+      hideAllViews();
+      document.getElementById("missed-clock-form").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "填寫補卡申請";
+      
+      const now = new Date();
+      document.getElementById("mc-date").value = now.toISOString().split("T")[0];
+      document.getElementById("mc-time").value = "";
+      document.getElementById("mc-reason").value = "";
+    }
+
+    function submitMissedClock() {
+      const clockDate = document.getElementById("mc-date").value;
+      const type = document.getElementById("mc-type").value;
+      const clockTime = document.getElementById("mc-time").value;
+      const reason = document.getElementById("mc-reason").value.trim();
+
+      if (!clockDate || !clockTime || !reason) {
+        showCustomAlert("提示", "請填寫完整日期、時間及原因！", false, true);
+        return;
+      }
+
+      submitToAppsScript({
+        action: "missedClock",
+        name: userName,
+        userId: userId,
+        clockDate: clockDate,
+        type: type,
+        clockTime: clockTime,
+        reason: reason
+      });
+
+      showCustomAlert("申請已送出", "補卡申請已送出，待主管審核！", true, false);
+    }
+
+    async function showTodayAttendance() {
+      hideAllViews();
+      document.getElementById("attendance-view").style.display = "block";
+      document.getElementById("page-subtitle").innerText = "今日出勤動態";
+      document.getElementById("attendance-list").innerText = "讀取中...";
+
+      try {
+        const url = gasUrl + "?action=getTodayAttendance";
+        const res = await fetch(url);
+        const result = await res.json();
+
+        if (!result.success) {
+          document.getElementById("attendance-list").innerText = "讀取失敗：" + result.status;
+          return;
+        }
+
+        let html = "";
+        result.data.forEach(emp => {
+          let badge = `<span style="background:#6c757d; color:#fff; font-size:12px; padding:2px 8px; border-radius:10px;">未出勤</span>`;
+          let detail = "尚無今日打卡紀錄";
+
+          if (emp.records.length > 0) {
+            badge = `<span style="background:#198754; color:#fff; font-size:12px; padding:2px 8px; border-radius:10px;">出勤中 (${emp.records.length}筆)</span>`;
+            detail = emp.records.map(r => `• ${r.type}：<b>${r.time}</b>`).join("<br>");
+          }
+
+          html += `
+            <div style="text-align:left; border:1px solid #e0e0e0; border-radius:10px; padding:12px; margin-bottom:10px; background:#fff;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-weight:bold; font-size:15px;">${emp.name}</span>
+                ${badge}
+              </div>
+              <div style="font-size:13px; color:#555; line-height:1.5;">${detail}</div>
+            </div>
+          `;
+        });
+
+        document.getElementById("attendance-list").innerHTML = html;
+      } catch (e) {
+        document.getElementById("attendance-list").innerText = "讀取失敗：" + e.message;
+      }
     }
 
     function toggleLeaveTimeInputs() {
@@ -869,7 +987,6 @@
         return;
       }
 
-      // 🌟 【防重複送出】鎖定送出按鈕 🌟
       const submitBtn = document.querySelector("#petty-cash-form .btn-blue");
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -900,7 +1017,6 @@
         } catch(e) {
           showCustomAlert("記帳已送出", `${actionText}項目：${category}\n金額：$${Number(amount).toLocaleString()} 元`, true, false);
         } finally {
-          // 恢復按鈕
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerText = "確認送出";
@@ -909,6 +1025,7 @@
         }
       }, 800);
     }
+
     async function showSalesForm() {
       hideAllViews();
       document.getElementById("sales-form").style.display = "block";
@@ -969,7 +1086,6 @@
         return;
       }
 
-      // 防連點鎖定
       const submitBtn = document.querySelector("#sales-form .btn-blue");
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -1182,7 +1298,10 @@
 
         items.forEach(function(item) {
           const isOvertime = (item.type === "加班");
-          const tagColor = isOvertime ? "#20c997" : "#0d6efd";
+          const isMissedClock = (item.type === "補卡");
+          let tagColor = "#0d6efd";
+          if (isOvertime) tagColor = "#20c997";
+          if (isMissedClock) tagColor = "#198754";
 
           html += `
             <div style="text-align:left; border:1px solid #e0e0e0; border-radius:10px; padding:15px; margin:12px 0; background-color:#fff;">
@@ -1191,7 +1310,7 @@
                 <span style="background:${tagColor}; color:#fff; font-size:12px; padding:3px 8px; border-radius:12px;">${item.type} - ${item.subType}</span>
               </div>
               <div style="font-size:14px; color:#444; margin-bottom:4px;"><strong>時間：</strong>${item.startDate} ${item.startTime} ~ ${item.endDate} ${item.endTime}</div>
-              ${!isOvertime ? `<div style="font-size:14px; color:#444; margin-bottom:4px;"><strong>請假時數：</strong>${item.hours} 小時</div>` : ''}
+              ${(!isOvertime && !isMissedClock) ? `<div style="font-size:14px; color:#444; margin-bottom:4px;"><strong>請假時數：</strong>${item.hours} 小時</div>` : ''}
               <div style="font-size:14px; color:#444; margin-bottom:12px;"><strong>原因：</strong>${item.reason}</div>
               <button class="btn-clock btn-on" style="margin:5px 0;" onclick="reviewItem('${item.sheetName}', ${item.rowNumber}, '已核准')">核准</button>
               <button class="btn-clock btn-off" style="margin:5px 0;" onclick="reviewItem('${item.sheetName}', ${item.rowNumber}, '已駁回')">駁回</button>
