@@ -394,11 +394,11 @@
           <input id="sales-soup" type="number" step="0.01" placeholder="例：0.25、0.5">
         </div>
         <div class="form-group">
-          <label for="sales-rice">登記飯數 (碗/鍋)</label>
+          <label for="sales-rice">登記飯數 </label>
           <input id="sales-rice" type="number" step="0.01" placeholder="例：10、20">
         </div>
         <div class="form-group">
-          <label for="sales-remain-soup">剩餘羹數 (鍋/碗)</label>
+          <label for="sales-remain-soup">剩餘羹數</label>
           <input id="sales-remain-soup" type="number" step="0.01" placeholder="打烊剩餘（可不填）">
         </div>
         <div class="form-group">
@@ -1059,10 +1059,14 @@
           const riceText = data.riceList.length > 0 ? data.riceList.join(" + ") : "無";
           const expenseText = data.expenseList.length > 0 ? data.expenseList.join("  ") : "無";
 
+          // 計算目前淨總數
+          const soupTotal = Math.round((data.totalSoup || 0) * 100) / 100;
+          const riceTotal = Math.round((data.totalRice || 0) * 100) / 100;
+
           summaryDiv.innerHTML = `
             <strong>📌 今日 ${monthDayStr} 已記錄：</strong><br>
-            • 羹 = ${soupText}<br>
-            • 飯 = ${riceText}<br>
+            • 羹 = ${soupText} <b>(共 ${soupTotal} )</b><br>
+            • 飯 = ${riceText} <b>(共 ${riceTotal})</b><br>
             • 支出金額 = ${expenseText}
           `;
         } else {
