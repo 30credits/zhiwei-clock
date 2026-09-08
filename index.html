@@ -437,7 +437,14 @@
           <input id="clean-note" type="text" placeholder="例：異常說明或備註">
         </div>
         <button class="btn-clock btn-blue" onclick="submitClean()">確認登記清潔</button>
-        <button class="btn-clock btn-gray" onclick="showHomeMenu()">返回首頁</button>
+        <button class="btn-clock btn-teal" onclick="fetchLastCleanRecords()">📋 查詢各設備上次清潔日期</button>
+        
+        <!-- 上次清潔資訊卡片 -->
+        <div id="clean-history-box" class="summary-card" style="display: none; margin-top: 15px; background-color: #f8f9fa; border-color: #ced4da; color: #333;">
+          <div id="clean-history-content">讀取中...</div>
+        </div>
+
+        <button class="btn-clock btn-gray" style="margin-top: 8px;" onclick="showHomeMenu()">返回首頁</button>
       </div>
 
       <!-- 工作守則視圖 -->
@@ -1136,11 +1143,13 @@
 
       document.getElementById("clean-device").value = "冰箱 A";
       document.getElementById("clean-note").value = "";
+      document.getElementById("clean-history-box").style.display = "none";
     }
 
     function submitClean() {
       const device = document.getElementById("clean-device").value;
       const note = document.getElementById("clean-note").value.trim();
+      
 
       submitToAppsScript({
         action: "clean",
@@ -1152,6 +1161,43 @@
 
       const msg = `清潔紀錄已送出！\n設備：${device}`;
       showCustomAlert("登記成功", msg, true, false);
+    }
+
+    async function fetchLastCleanRecords() {
+      const historyBox = document.getElementById("clean-history-box");
+      const historyContent = document.getElementById("clean-history-content");
+      historyBox.style.display = "block";
+      historyContent.innerHTML = "⏳ 正在查詢最新清潔紀錄...";
+
+      const targetDevices = ["冰箱 A", "冰箱 B", "冰箱 C", "冰箱 D", "冷氣 (1)", "冷氣 (2)"];
+
+      try {
+        const url = gasUrl + "?action=getLastClean";
+        const res = await fetch(url);
+        const result = await res.json();
+
+        if (!result.success) {
+          historyContent.innerHTML = "❌ 查詢失敗：" + (result.status || "後端異常");
+          return;
+        }
+
+        const data = result.data || {};
+        let html = "<strong>📌 各設備上次清潔狀況：</strong><br><br>";
+
+        targetDevices.forEach(dev => {
+          if (data[dev]) {
+            const item = data[dev];
+            const noteText = item.note ? ` (${item.note})` : "";
+            html += `• <b>${dev}</b>：${item.date} <span style="color:#666;">[${item.person}]</span>${noteText}<br>`;
+          } else {
+            html += `• <b>${dev}</b>：<span style="color:#999;">尚未有清潔紀錄</span><br>`;
+          }
+        });
+
+        historyContent.innerHTML = html;
+      } catch (err) {
+        historyContent.innerHTML = "❌ 連線錯誤：" + err.message;
+      }
     }
 
     function showRulesView() {
